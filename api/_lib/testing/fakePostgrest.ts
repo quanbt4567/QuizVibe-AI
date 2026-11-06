@@ -2,10 +2,10 @@ import crypto from 'node:crypto';
 import { campaignValidationCache } from '../quiz/campaignCache.js';
 
 /**
- * Minimal in-memory PostgREST emulator for tests (NOT a test file: no `.test.` in the name).
+ * An in-memory, deterministic fake of Supabase's PostgREST endpoint.
  * Supports the subset of PostgREST used by QuizVibe: eq / is / like / in filters, order, limit,
  * select column lists, single-object Accept, insert / upsert (on_conflict), PATCH, and the
- * `admin_save_campaign` RPC. Any request to a host other than the synthetic one throws, so tests
+ * `admin_save_campaign` and `register_quiz_lead` RPCs. Any request to a host other than the synthetic one throws, so tests
  * can never reach a real Supabase project.
  */
 
@@ -29,6 +29,7 @@ export class FakePostgrest {
     admin_sessions: [],
     quiz_sessions: [],
     leads: [],
+    campaign_phone_registrations: [],
   };
   public requests: RecordedRequest[] = [];
   /** Returns a failure mode to inject for a request, or null/undefined to process normally. */
@@ -52,59 +53,81 @@ export class FakePostgrest {
     };
   }
 
-  private json(status: number, payload: unknown) {
-    return new Response(JSON.stringify(payload), {
+  private json(status: number, data: any): Response {
+    return new Response(JSON.stringify(data), {
       status,
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+      },
     });
   }
 
   private matches(row: Row, params: Record<string, string>): boolean {
-    for (const [key, raw] of Object.entries(params)) {
-      if (['select', 'order', 'limit', 'offset', 'on_conflict', 'columns'].includes(key)) continue;
-      const dot = raw.indexOf('.');
-      const op = raw.slice(0, dot);
-      const val = raw.slice(dot + 1);
-      const cell = row[key];
-      if (op === 'eq') {
-        if (String(cell) !== val) return false;
-      } else if (op === 'is') {
-        if (val === 'null' && cell !== null && cell !== undefined) return false;
-      } else if (op === 'like') {
-        const prefix = val.replace(/%$/, '');
-        if (typeof cell !== 'string' || !cell.startsWith(prefix)) return false;
-      } else if (op === 'in') {
-        const list = val.replace(/^\(|\)$/g, '').split(',').map((s) => s.replace(/^"|"$/g, ''));
-        if (!list.includes(String(cell))) return false;
+    for (const [key, rawVal] of Object.entries(params)) {
+      if (['select', 'order', 'limit', 'on_conflict'].includes(key)) continue;
+
+      if (rawVal.startsWith('eq.')) {
+        const expected = rawVal.slice(3);
+        const actual = row[key];
+        if (expected === 'null') {
+          if (actual !== null && actual !== undefined) return false;
+        } else if (String(actual) !== expected) {
+          return false;
+        }
+      } else if (rawVal.startsWith('is.')) {
+        const expected = rawVal.slice(3);
+        if (expected === 'null' && row[key] !== null) return false;
+      } else if (rawVal.startsWith('like.')) {
+        const pattern = rawVal.slice(5).replace(/%/g, '.*');
+        const re = new RegExp(`^${pattern}$`);
+        if (!re.test(String(row[key] ?? ''))) return false;
+      } else if (rawVal.startsWith('in.')) {
+        const items = rawVal.slice(4).replace(/^\(/, '').replace(/\)$/, '').split(',');
+        if (!items.includes(String(row[key]))) return false;
       }
     }
     return true;
   }
 
-  private project(rows: Row[], select: string | undefined): Row[] {
-    if (!select || select === '*') return rows.map((r) => ({ ...r }));
-    const cols = select.split(',').map((c) => c.trim());
-    return rows.map((r) => Object.fromEntries(cols.map((c) => [c, r[c]])));
+  private project(rows: Row[], selectClause?: string): Row[] {
+    if (!selectClause || selectClause === '*') return rows.map((r) => ({ ...r }));
+    const cols = selectClause.split(',').map((c) => c.trim().split(':')[0]);
+    return rows.map((r) => {
+      const out: Row = {};
+      for (const c of cols) {
+        if (c in r) out[c] = r[c];
+      }
+      return out;
+    });
   }
 
-  private async handle(input: any, init: any): Promise<Response> {
-    const url = new URL(typeof input === 'string' ? input : input.url ?? String(input));
-    if (url.hostname !== FAKE_SUPABASE_HOST) {
-      throw new Error(`Blocked non-synthetic network call to ${url.hostname}`);
+  public async handle(input: any, init: any = {}): Promise<Response> {
+    const url = new URL(typeof input === 'string' ? input : input.url);
+    if (url.host !== FAKE_SUPABASE_HOST) {
+      throw new Error(`Real network call attempted to ${url.host} in test suite`);
     }
 
-    const method = String(init.method || 'GET').toUpperCase();
-    const params: Record<string, string> = {};
-    url.searchParams.forEach((v, k) => {
-      params[k] = v;
-    });
-    const body = typeof init.body === 'string' ? JSON.parse(init.body) : undefined;
-    const headers = new Headers(init.headers);
+    const method = (init.method || 'GET').toUpperCase();
+    const headers = new Headers(init.headers || {});
     const accept = headers.get('accept') || '';
     const prefer = headers.get('prefer') || '';
     const path = url.pathname.replace(/^\/rest\/v1\//, '');
     const isRpc = path.startsWith('rpc/');
     const table = isRpc ? path.slice(4) : path;
+    const params: Record<string, string> = {};
+    url.searchParams.forEach((v, k) => {
+      params[k] = v;
+    });
+
+    let body: any = null;
+    if (init.body) {
+      try {
+        body = JSON.parse(init.body);
+      } catch {
+        body = init.body;
+      }
+    }
+
     const recorded: RecordedRequest = { method, table, params, body };
     this.requests.push(recorded);
 
@@ -141,19 +164,23 @@ export class FakePostgrest {
           for (const { col, dir } of sortKeys) {
             const av = a[col] ?? '';
             const bv = b[col] ?? '';
-            if (av !== bv) {
-              return (av < bv ? -1 : 1) * (dir === 'desc' ? -1 : 1);
-            }
+            if (av === bv) continue;
+            if (dir === 'desc') return av > bv ? -1 : 1;
+            return av > bv ? 1 : -1;
           }
           return 0;
         });
       }
-      if (params.limit) result = result.slice(0, Number(params.limit));
+      if (params.limit) {
+        const limit = parseInt(params.limit, 10);
+        if (!isNaN(limit)) result = result.slice(0, limit);
+      }
       const projected = this.project(result, params.select);
       if (accept.includes('pgrst.object')) {
-        return projected.length === 1
-          ? this.json(200, projected[0])
-          : this.json(406, { code: 'PGRST116', message: 'no or multiple rows' });
+        if (projected.length === 0) {
+          return this.json(406, { code: 'PGRST116', message: 'JSON object requested, multiple (or no) rows returned' });
+        }
+        return this.json(200, projected[0]);
       }
       return this.json(200, projected);
     }
@@ -168,6 +195,40 @@ export class FakePostgrest {
           Object.assign(existing, item);
           saved.push(existing);
           continue;
+        }
+        if (table === 'campaign_phone_registrations') {
+          if (
+            item.phone_hash &&
+            rows.some((r) => r.campaign_id === item.campaign_id && r.phone_hash === item.phone_hash)
+          ) {
+            return this.json(409, {
+              code: '23505',
+              message: 'duplicate key value violates unique constraint "uq_campaign_phone_registrations"',
+              details: 'Key (campaign_id, phone_hash)=(...) already exists.',
+            });
+          }
+        }
+        if (table === 'leads') {
+          if (
+            item.quiz_session_id &&
+            rows.some((r) => r.quiz_session_id === item.quiz_session_id)
+          ) {
+            return this.json(409, {
+              code: '23505',
+              message: 'duplicate key value violates unique constraint "leads_quiz_session_id_key"',
+            });
+          }
+          if (
+            item.phone_hash &&
+            rows.some(
+              (r) => r.campaign_id === item.campaign_id && r.phone_hash === item.phone_hash
+            )
+          ) {
+            return this.json(409, {
+              code: '23505',
+              message: 'duplicate key value violates unique constraint "leads_campaign_phone_hash_key"',
+            });
+          }
         }
         // Simulate Postgres trigger trg_sync_quiz_sessions_token_hash on public.quiz_sessions
         if (table === 'quiz_sessions' && item.session_token) {
@@ -240,8 +301,118 @@ export class FakePostgrest {
     return this.json(405, { message: 'unsupported in fake' });
   }
 
-  /** Emulates public.admin_save_campaign(): all-or-nothing (state is only committed on success). */
+  /** Emulates public RPC functions with all-or-nothing transactional semantics. */
   private rpc(fn: string, body: any): Response {
+    if (fn === 'register_quiz_lead') {
+      const payload = body?.p_payload;
+      if (!payload || typeof payload !== 'object') {
+        return this.json(400, { code: '22023', message: 'invalid payload' });
+      }
+      const {
+        campaign_id,
+        quiz_session_id,
+        full_name,
+        phone_number,
+        phone_hash,
+        masked_phone,
+        score,
+        time_taken_seconds,
+        voucher_code,
+        submitted_at,
+      } = payload;
+
+      if (!campaign_id || !full_name || full_name.length < 2) {
+        return this.json(400, { code: '22023', message: 'invalid payload' });
+      }
+
+      const computedHash =
+        phone_hash ||
+        crypto
+          .createHash('sha256')
+          .update(phone_number.trim().replace(/[\s().-]+/g, ''))
+          .digest('hex');
+
+      // Check unique claim in campaign_phone_registrations
+      const registrations = this.tables.campaign_phone_registrations;
+      if (
+        registrations.some(
+          (r) => r.campaign_id === campaign_id && r.phone_hash === computedHash
+        )
+      ) {
+        return this.json(409, {
+          code: '23505',
+          message: 'duplicate key value violates unique constraint "uq_campaign_phone_registrations"',
+          details: 'Key (campaign_id, phone_hash)=(...) already exists.',
+        });
+      }
+
+      // Check unique quiz_session_id in leads
+      const leads = this.tables.leads;
+      if (
+        quiz_session_id &&
+        leads.some((r) => r.quiz_session_id === quiz_session_id)
+      ) {
+        return this.json(409, {
+          code: '23505',
+          message: 'duplicate key value violates unique constraint "leads_quiz_session_id_key"',
+        });
+      }
+
+      // Check failure mode simulation
+      const simulatedLeadReq: RecordedRequest = {
+        method: 'POST',
+        table: 'leads',
+        params: {},
+        body: payload,
+      };
+      const mode = this.failure?.(simulatedLeadReq);
+      if (mode === 'masked_phone_check') {
+        const prefix2 = String(phone_number || '').trim().replace(/\s+/g, '').slice(0, 2);
+        if (!masked_phone || !masked_phone.startsWith(`${prefix2}***`)) {
+          return this.json(400, {
+            code: '23514',
+            message: 'new row for relation "leads" violates check constraint "leads_masked_phone_check"',
+          });
+        }
+      }
+      if (mode === 'duplicate_session_race') {
+        return this.json(409, {
+          code: '23505',
+          message: 'duplicate key value violates unique constraint "leads_quiz_session_id_key"',
+        });
+      }
+
+      const leadId = crypto.randomUUID();
+      const now = submitted_at || new Date().toISOString();
+      const leadRow = {
+        id: leadId,
+        campaign_id,
+        quiz_session_id: quiz_session_id ?? null,
+        full_name,
+        phone_number,
+        phone_hash: computedHash,
+        masked_phone,
+        score: Number(score),
+        time_taken_seconds: Number(time_taken_seconds || 0),
+        voucher_code: voucher_code || null,
+        submitted_at: now,
+        created_at: now,
+      };
+
+      const regRow = {
+        id: crypto.randomUUID(),
+        campaign_id,
+        phone_hash: computedHash,
+        first_lead_id: leadId,
+        created_at: now,
+      };
+
+      registrations.push(regRow);
+      leads.push(leadRow);
+
+      return this.json(200, leadRow);
+    }
+
     if (fn !== 'admin_save_campaign') {
       return this.json(404, { code: '42883', message: 'function does not exist' });
     }
@@ -296,34 +467,36 @@ export class FakePostgrest {
         title: payload.title,
         description: payload.description ?? '',
         industry: payload.industry,
-        is_ai_generated: Boolean(payload.is_ai_generated),
-        is_mock: Boolean(payload.is_mock),
         mock_label: payload.mock_label || null,
         updated_at: new Date().toISOString(),
       });
     }
 
+    // Upsert questions by (campaign_id, question_order)
     for (let i = 0; i < 5; i++) {
       const q = payload.questions[i];
       const existing = questions.find((r) => r.campaign_id === id && r.question_order === i);
       const values = {
+        question_order: i,
         question_text: q.question_text,
         options: q.options,
         correct_index: q.correct_index,
         explanation: q.explanation || null,
+        updated_at: new Date().toISOString(),
       };
-      if (existing) Object.assign(existing, values);
-      else {
+      if (existing) {
+        Object.assign(existing, values);
+      } else {
         questions.push({
           id: crypto.randomUUID(),
           campaign_id: id,
-          question_order: i,
           created_at: new Date().toISOString(),
           ...values,
         });
       }
     }
 
+    // Upsert voucher (one-to-one per campaign)
     const v = payload.voucher;
     const vValues = {
       code: v.code,
@@ -342,4 +515,3 @@ export class FakePostgrest {
     return this.json(200, id);
   }
 }
-

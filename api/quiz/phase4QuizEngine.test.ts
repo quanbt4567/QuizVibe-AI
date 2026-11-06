@@ -41,8 +41,10 @@ async function loadHandlers() {
 
 const CAMPAIGN_ID = '11111111-1111-4111-8111-111111111111';
 const DRAFT_CAMPAIGN_ID = '22222222-2222-4222-8222-222222222222';
+const SECOND_CAMPAIGN_ID = '33333333-3333-4333-8333-333333333333';
 const CAMPAIGN_SLUG = 'thu-thach-lam-dep';
 const DRAFT_SLUG = 'nhap-chua-xuat-ban';
+const SECOND_CAMPAIGN_SLUG = 'thu-thach-thoi-trang';
 
 function seedTestCampaigns() {
   const now = new Date().toISOString();
@@ -100,6 +102,44 @@ function seedTestCampaigns() {
     code: 'BEAUTY50',
     discount: 'Giảm 50% đơn hàng',
     description: 'Dành cho khách hàng vượt qua minigame',
+    expiry_date: '30 ngày kể từ khi nhận',
+    terms: 'Áp dụng trên toàn hệ thống',
+    created_at: now,
+    updated_at: now,
+  });
+
+  fake.tables.campaigns.push({
+    id: SECOND_CAMPAIGN_ID,
+    slug: SECOND_CAMPAIGN_SLUG,
+    title: 'Thử thách Thời trang Mùa xuân',
+    description: 'Trả lời 5 câu trắc nghiệm nhận voucher',
+    industry: 'Thời trang',
+    status: 'published',
+    is_ai_generated: false,
+    is_mock: false,
+    published_at: now,
+    created_at: now,
+    updated_at: now,
+  });
+  for (let i = 0; i < 5; i++) {
+    fake.tables.campaign_questions.push({
+      id: `q_second_${i + 1}`,
+      campaign_id: SECOND_CAMPAIGN_ID,
+      question_order: i,
+      question_text: `Nội dung câu hỏi thời trang số ${i + 1}?`,
+      options: ['Phương án A', 'Phương án B', 'Phương án C', 'Phương án D'],
+      correct_index: 1,
+      explanation: `Giải thích thời trang ${i + 1}`,
+      created_at: now,
+      updated_at: now,
+    });
+  }
+  fake.tables.vouchers.push({
+    id: 'v_second',
+    campaign_id: SECOND_CAMPAIGN_ID,
+    code: 'STYLE20',
+    discount: 'Giảm 20% đơn hàng',
+    description: 'Dành cho khách hàng vượt qua thử thách',
     expiry_date: '30 ngày kể từ khi nhận',
     terms: 'Áp dụng trên toàn hệ thống',
     created_at: now,
@@ -437,8 +477,8 @@ describe('Phase 4: Player Sessions & Server-Side Scoring Engine', () => {
   });
 
   describe('4. Lead Submission & Voucher Unlocking (POST /api/quiz/lead)', () => {
-    async function completeFullQuiz(): Promise<string> {
-      const sHttp = mockHttp({ method: 'POST', body: { slug: CAMPAIGN_SLUG } });
+    async function completeFullQuiz(slug = CAMPAIGN_SLUG): Promise<string> {
+      const sHttp = mockHttp({ method: 'POST', body: { slug } });
       await sessionHandler(sHttp.req, sHttp.res);
       const token = sHttp.res.body$().session.sessionToken;
 
@@ -577,6 +617,75 @@ describe('Phase 4: Player Sessions & Server-Side Scoring Engine', () => {
 
       // Still only 1 row in database
       expect(fake.tables.leads).toHaveLength(1);
+    });
+
+    it('rejects the same normalized phone in the same campaign with PHONE_ALREADY_REGISTERED', async () => {
+      const firstToken = await completeFullQuiz();
+      const first = mockHttp({
+        method: 'POST',
+        body: { sessionToken: firstToken, fullName: 'Nguyễn Văn A', phoneNumber: '0987654321' },
+      });
+      await leadHandler(first.req, first.res);
+      expect(first.res.status$()).toBe(201);
+
+      const secondToken = await completeFullQuiz();
+      const second = mockHttp({
+        method: 'POST',
+        body: { sessionToken: secondToken, fullName: 'Nguyễn Văn B', phoneNumber: '+84 987 654 321' },
+      });
+      await leadHandler(second.req, second.res);
+
+      expect(second.res.status$()).toBe(409);
+      expect(second.res.body$().code).toBe('PHONE_ALREADY_REGISTERED');
+      expect(fake.tables.leads).toHaveLength(1);
+      expect(fake.tables.leads[0].voucher_code).toBe('BEAUTY50');
+    });
+
+    it('allows the same normalized phone in a different campaign', async () => {
+      const firstToken = await completeFullQuiz();
+      const first = mockHttp({
+        method: 'POST',
+        body: { sessionToken: firstToken, fullName: 'Nguyễn Văn A', phoneNumber: '0987654321' },
+      });
+      await leadHandler(first.req, first.res);
+      expect(first.res.status$()).toBe(201);
+
+      const secondToken = await completeFullQuiz(SECOND_CAMPAIGN_SLUG);
+      const second = mockHttp({
+        method: 'POST',
+        body: { sessionToken: secondToken, fullName: 'Nguyễn Văn B', phoneNumber: '0987654321' },
+      });
+      await leadHandler(second.req, second.res);
+
+      expect(second.res.status$()).toBe(201);
+      expect(fake.tables.leads).toHaveLength(2);
+      expect(fake.tables.leads.map((lead) => lead.campaign_id)).toEqual(
+        expect.arrayContaining([CAMPAIGN_ID, SECOND_CAMPAIGN_ID])
+      );
+    });
+
+    it('allows concurrent submissions to issue only one voucher and leaderboard entry', async () => {
+      const firstToken = await completeFullQuiz();
+      const secondToken = await completeFullQuiz();
+      const requests = [firstToken, secondToken].map((sessionToken, index) => {
+        const http = mockHttp({
+          method: 'POST',
+          body: {
+            sessionToken,
+            fullName: `Nguyễn Văn ${index ? 'B' : 'A'}`,
+            phoneNumber: '0987654321',
+          },
+        });
+        return { http, promise: leadHandler(http.req, http.res) };
+      });
+      await Promise.all(requests.map(({ promise }) => promise));
+
+      expect(requests.map(({ http }) => http.res.status$()).sort()).toEqual([201, 409]);
+      expect(fake.tables.leads).toHaveLength(1);
+      const leaderboard = mockHttp({ method: 'GET', query: { slug: CAMPAIGN_SLUG } });
+      await leaderboardHandler(leaderboard.req, leaderboard.res);
+      expect(leaderboard.res.status$()).toBe(200);
+      expect(leaderboard.res.body$().leaderboard).toHaveLength(1);
     });
 
     it('rejects lead submission if campaign is unpublished mid-session', async () => {

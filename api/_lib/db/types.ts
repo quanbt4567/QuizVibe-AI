@@ -150,6 +150,7 @@ export type LeadRow = {
   quiz_session_id: string | null;
   full_name: string;
   phone_number: string;
+  phone_hash?: string | null;
   masked_phone: string;
   score: number;
   time_taken_seconds: number;
@@ -164,11 +165,28 @@ export type LeadInsert = {
   quiz_session_id?: string | null;
   full_name: string;
   phone_number: string;
+  phone_hash?: string;
   masked_phone: string;
   score: number;
   time_taken_seconds: number;
   voucher_code?: string | null;
   submitted_at?: string;
+  created_at?: string;
+};
+
+export type CampaignPhoneRegistrationRow = {
+  id: string;
+  campaign_id: string;
+  phone_hash: string;
+  first_lead_id: string | null;
+  created_at: string;
+};
+
+export type CampaignPhoneRegistrationInsert = {
+  id?: string;
+  campaign_id: string;
+  phone_hash: string;
+  first_lead_id?: string | null;
   created_at?: string;
 };
 
@@ -240,6 +258,12 @@ export type Database = {
         Update: Partial<LeadInsert>;
         Relationships: [];
       };
+      campaign_phone_registrations: {
+        Row: CampaignPhoneRegistrationRow;
+        Insert: CampaignPhoneRegistrationInsert;
+        Update: Partial<CampaignPhoneRegistrationInsert>;
+        Relationships: [];
+      };
       admin_sessions: {
         Row: AdminSessionRow;
         Insert: AdminSessionInsert;
@@ -252,6 +276,10 @@ export type Database = {
       admin_save_campaign: {
         Args: { p_campaign_id: string | null; p_payload: Record<string, unknown> };
         Returns: string;
+      };
+      register_quiz_lead: {
+        Args: { p_payload: Record<string, unknown> };
+        Returns: LeadRow;
       };
     };
     Enums: Record<string, never>;

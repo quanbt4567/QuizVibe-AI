@@ -4,10 +4,8 @@ import {
   Trophy,
   Gift,
   Clock,
-  Zap,
   AlertCircle,
   Play,
-  ShieldCheck,
   RefreshCw,
 } from 'lucide-react';
 import { MOCK_MODE_LABEL } from '../../types/quiz';
@@ -132,11 +130,6 @@ export const PublicCampaignScreen: React.FC<PublicCampaignScreenProps> = ({ camp
 
       <Card variant="player" className="p-5 sm:p-7 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle pb-4">
-          <Badge variant="default" className="gap-1.5 font-bold">
-            <Zap className="w-3 h-3 fill-current" />
-            <span>Thử thách Fanpage</span>
-          </Badge>
-
           <div className="flex items-center gap-1.5">
             <Badge variant="outline" className="font-medium text-content-secondary">
               {campaign.industry}
@@ -268,9 +261,9 @@ export const PublicCampaignScreen: React.FC<PublicCampaignScreenProps> = ({ camp
             role="status"
             className="flex items-start gap-2.5 rounded-xl border border-border-subtle bg-recessed p-3 text-left text-[11px] sm:text-xs text-content-secondary leading-relaxed"
           >
-            <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" />
+            <Trophy className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" />
             <span>
-              Chấm điểm trực tiếp trên máy chủ — phản xạ trả lời càng nhanh, điểm tốc độ càng cao!
+              Trả lời nhanh và chính xác để đạt điểm cao hơn.
             </span>
           </div>
         </div>

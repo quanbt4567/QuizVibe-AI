@@ -2,12 +2,19 @@ import { Campaign, Question, VoucherConfig, Lead, LeaderboardEntry, LeadSubmissi
 
 export const VIETNAMESE_PHONE_REGEX = /^(03|05|07|08|09)\d{8}$/;
 
+export function normalizeVietnamesePhone(phone: string): string {
+  const compact = (phone || '').trim().replace(/[\s().-]+/g, '');
+  if (compact.startsWith('+84')) return `0${compact.slice(3)}`;
+  if (compact.startsWith('84') && compact.length === 11) return `0${compact.slice(2)}`;
+  return compact;
+}
+
 /**
  * Validates whether a phone number string matches the Vietnamese 10-digit mobile spec.
  */
 export function isValidVietnamesePhone(phone: string): boolean {
   if (typeof phone !== 'string') return false;
-  const cleanPhone = phone.trim().replace(/\s+/g, '');
+  const cleanPhone = normalizeVietnamesePhone(phone);
   return VIETNAMESE_PHONE_REGEX.test(cleanPhone);
 }
 

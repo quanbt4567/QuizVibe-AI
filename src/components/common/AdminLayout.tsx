@@ -10,7 +10,6 @@ import {
   PanelLeftOpen,
   Menu,
   X,
-  ShieldCheck,
   ChevronRight,
 } from 'lucide-react';
 import { AdminRouteSection } from '../../router/appRouter';
@@ -336,11 +335,6 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
           {/* Right Header: Security Badge & Logout */}
           <div className="flex items-center gap-2.5 shrink-0">
-            <div className="hidden sm:flex items-center gap-1.5 text-xs text-content-muted pr-2 border-r border-border/80">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-              <span className="font-medium text-[11px]">Xác thực Server</span>
-            </div>
-
             <Button
               type="button"
               variant="ghost"

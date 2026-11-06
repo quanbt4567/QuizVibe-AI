@@ -11,7 +11,11 @@ import {
 } from 'lucide-react';
 import { Lead, VoucherConfig } from '../../types';
 import { StorageService } from '../../services';
-import { VIETNAMESE_PHONE_REGEX, maskPhoneNumber } from '../../services/validators';
+import {
+  VIETNAMESE_PHONE_REGEX,
+  maskPhoneNumber,
+  normalizeVietnamesePhone,
+} from '../../services/validators';
 import { playerApi, PlayerApiError, type UnlockedVoucher } from '../../services/playerApi';
 import { VoucherRewardCard } from './VoucherRewardCard';
 import { Card } from '../ui/card';
@@ -58,7 +62,7 @@ export function validateVietnamesePhone(phone: string): { valid: boolean; error?
   if (typeof phone !== 'string') {
     return { valid: false, error: 'Vui lòng nhập số điện thoại nhận voucher.', sanitized: '' };
   }
-  const cleanPhone = phone.trim().replace(/\s+/g, '');
+  const cleanPhone = normalizeVietnamesePhone(phone);
   if (!cleanPhone) {
     return { valid: false, error: 'Vui lòng nhập số điện thoại nhận voucher.', sanitized: '' };
   }
@@ -219,7 +223,9 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({
       } catch (err: unknown) {
         let errMsg = 'Không thể lưu thông tin lúc này. Vui lòng thử lại sau.';
         if (err instanceof PlayerApiError) {
-          if (err.code === 'DUPLICATE_LEAD') {
+          if (err.code === 'PHONE_ALREADY_REGISTERED') {
+            errMsg = 'Số điện thoại này đã được sử dụng để nhận ưu đãi trong chương trình. Mỗi số điện thoại chỉ được nhận Voucher một lần.';
+          } else if (err.code === 'DUPLICATE_LEAD') {
             errMsg = 'Thông tin của bạn đã được ghi nhận trước đó cho lượt chơi này.';
           } else if (err.code === 'SESSION_NOT_FOUND' || err.code === 'SESSION_EXPIRED') {
             errMsg = 'Phiên chơi không tồn tại hoặc đã hết hạn. Vui lòng bắt đầu lại.';

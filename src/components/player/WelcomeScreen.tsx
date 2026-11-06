@@ -4,7 +4,6 @@ import {
   Trophy,
   Gift,
   Clock,
-  Zap,
   AlertCircle,
   HelpCircle,
   RefreshCw,
@@ -96,11 +95,6 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
       <Card variant="player" className="p-5 sm:p-7 space-y-5">
         {/* Top Meta Bar: Challenge Pill & Industry Badge */}
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle pb-4">
-          <Badge variant="default" className="gap-1.5 font-bold">
-            <Zap className="w-3 h-3 fill-current" />
-            <span>Thử thách Fanpage</span>
-          </Badge>
-
           <div className="flex items-center gap-1.5">
             <Badge variant="outline" className="font-medium text-content-secondary">
               {campaign.industry}

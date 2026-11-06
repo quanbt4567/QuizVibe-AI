@@ -65,6 +65,13 @@ export default async function handler(req: any, res: any) {
         error: err.message,
       });
     }
+    if (err instanceof DatabaseOperationError && err.code === 'PHONE_ALREADY_REGISTERED') {
+      return res.status(409).json({
+        ok: false,
+        code: 'PHONE_ALREADY_REGISTERED',
+        error: 'Số điện thoại này đã được sử dụng để nhận ưu đãi trong chương trình. Mỗi số điện thoại chỉ được nhận Voucher một lần.',
+      });
+    }
     console.error('[api/quiz/lead] Unexpected lead submission failure:', err);
     return res.status(503).json({
       ok: false,

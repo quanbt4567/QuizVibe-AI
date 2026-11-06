@@ -2,13 +2,13 @@ import crypto from 'node:crypto';
 import { SupabaseClient } from '@supabase/supabase-js';
 import {
   CampaignInsert,
+  CampaignPhoneRegistrationRow,
   CampaignQuestionInsert,
   CampaignQuestionRow,
   CampaignRow,
   CampaignStatus,
   CompleteCampaignRecord,
   Database,
-  LeadInsert,
   LeadRow,
   PublicLeaderboardRow,
   QuizSessionAnswerSnapshot,
@@ -26,6 +26,21 @@ import { campaignValidationCache } from '../quiz/campaignCache.js';
 assertServerRuntime();
 
 export const SERVER_VIETNAMESE_PHONE_REGEX = /^(03|05|07|08|09)\d{8}$/;
+
+/**
+ * Converts accepted Vietnamese phone input formats to the canonical 10-digit
+ * domestic form used for validation, masking, and duplicate detection.
+ */
+export function normalizeVietnamesePhone(phone: string): string {
+  const compact = (phone || '').trim().replace(/[\s().-]+/g, '');
+  if (compact.startsWith('+84')) return `0${compact.slice(3)}`;
+  if (compact.startsWith('84') && compact.length === 11) return `0${compact.slice(2)}`;
+  return compact;
+}
+
+export function hashVietnamesePhone(phone: string): string {
+  return crypto.createHash('sha256').update(normalizeVietnamesePhone(phone)).digest('hex');
+}
 
 export class DatabaseOperationError extends Error {
   public readonly code: string;
@@ -69,7 +84,7 @@ export function slugifyCampaignTitle(title: string, suffix?: string): string {
  */
 export function isValidVietnamesePhoneServer(phone: string): boolean {
   if (typeof phone !== 'string') return false;
-  const clean = phone.trim().replace(/\s+/g, '');
+  const clean = normalizeVietnamesePhone(phone);
   return SERVER_VIETNAMESE_PHONE_REGEX.test(clean);
 }
 
@@ -77,7 +92,7 @@ export function isValidVietnamesePhoneServer(phone: string): boolean {
  * Computes the privacy-masked phone number on the server (e.g., 098***5678).
  */
 export function maskVietnamesePhone(phone: string): string {
-  const clean = (phone || '').trim().replace(/\s+/g, '');
+  const clean = normalizeVietnamesePhone(phone);
   if (!isValidVietnamesePhoneServer(clean)) {
     throw new DatabaseOperationError(
       'INVALID_PHONE_NUMBER',
@@ -122,6 +137,7 @@ export interface CreateLeadServerInput {
   quiz_session_id?: string | null;
   full_name: string;
   phone_number: string;
+  phone_hash?: string;
   score: number;
   time_taken_seconds: number;
   voucher_code?: string | null;
@@ -404,11 +420,13 @@ export class QuizVibeDatabaseRepository {
       );
     }
 
-    const leadInsert: LeadInsert = {
+    const phoneHash = input.phone_hash ?? hashVietnamesePhone(cleanPhone);
+    const payload = {
       campaign_id: input.campaign_id,
       quiz_session_id: input.quiz_session_id ?? null,
       full_name: cleanName,
       phone_number: cleanPhone,
+      phone_hash: phoneHash,
       masked_phone: maskedPhone,
       score: input.score,
       time_taken_seconds: input.time_taken_seconds,
@@ -416,22 +434,32 @@ export class QuizVibeDatabaseRepository {
       submitted_at: input.submitted_at ?? new Date().toISOString(),
     };
 
-    let { data, error } = await this.db
-      .from('leads')
-      .insert(leadInsert)
-      .select('*')
-      .single();
+    let { data, error } = await this.db.rpc('register_quiz_lead', {
+      p_payload: payload,
+    });
 
     // Defensive fallback: If database has legacy leads_masked_phone_check requiring 9-character format (2-digit prefix)
     if (error && (error.code === '23514' || error.message?.includes('leads_masked_phone_check'))) {
       const fallbackMask = `${cleanPhone.slice(0, 2)}***${cleanPhone.slice(-4)}`;
-      const retryResult = await this.db
-        .from('leads')
-        .insert({ ...leadInsert, masked_phone: fallbackMask })
-        .select('*')
-        .single();
+      const retryResult = await this.db.rpc('register_quiz_lead', {
+        p_payload: { ...payload, masked_phone: fallbackMask },
+      });
       data = retryResult.data;
       error = retryResult.error;
+    }
+
+    if (
+      error?.code === '23505' &&
+      (error.message?.includes('uq_campaign_phone_registrations') ||
+        error.message?.includes('PHONE_ALREADY_REGISTERED') ||
+        error.message?.includes('leads_campaign_phone_hash_key') ||
+        (typeof error.details === 'string' && error.details.includes('uq_campaign_phone_registrations')))
+    ) {
+      throw new DatabaseOperationError(
+        'PHONE_ALREADY_REGISTERED',
+        'Số điện thoại này đã được sử dụng để nhận ưu đãi trong chương trình.',
+        error
+      );
     }
 
     if (error?.code === '23505') {
@@ -702,6 +730,41 @@ export class QuizVibeDatabaseRepository {
    * Calculates deterministic rank for a lead in a campaign using canonical ordering:
    * 1. score DESC, 2. time_taken_seconds ASC, 3. submitted_at ASC.
    */
+  /**
+   * Checks campaign-scoped phone registration without exposing any lead data.
+   */
+  public async getCampaignPhoneRegistration(
+    campaignId: string,
+    phoneHash: string
+  ): Promise<Pick<CampaignPhoneRegistrationRow, 'id'> | null> {
+    const { data, error } = await this.db
+      .from('campaign_phone_registrations')
+      .select('id')
+      .eq('campaign_id', campaignId)
+      .eq('phone_hash', phoneHash)
+      .maybeSingle();
+
+    if (error) {
+      throw new DatabaseOperationError(
+        'LEAD_QUERY_FAILED',
+        'Failed to check campaign phone registration.',
+        error
+      );
+    }
+    return (data as Pick<CampaignPhoneRegistrationRow, 'id'> | null) ?? null;
+  }
+
+  /**
+   * Checks campaign-scoped phone uniqueness without exposing any lead data.
+   */
+  public async getLeadByCampaignPhoneHash(
+    campaignId: string,
+    phoneHash: string
+  ): Promise<Pick<LeadRow, 'id'> | null> {
+    const reg = await this.getCampaignPhoneRegistration(campaignId, phoneHash);
+    return reg ? { id: reg.id } : null;
+  }
+
   public async getLeadRank(
     campaignId: string,
     score: number,

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layers } from 'lucide-react';
-import { Badge } from '../ui';
 
 export interface PublicPlayerLayoutProps {
   children: React.ReactNode;
@@ -33,13 +32,6 @@ export const PublicPlayerLayout: React.FC<PublicPlayerLayoutProps> = ({
                 QuizVibe <span className="text-primary">AI</span>
               </span>
 
-              <Badge
-                variant="muted"
-                shape="compact"
-                className="font-mono text-[10px] uppercase tracking-wider shrink-0"
-              >
-                MINIGAME
-              </Badge>
             </div>
           </div>
 

@@ -1,6 +1,12 @@
 import crypto from 'node:crypto';
 import { assertServerRuntime } from '../db/config.js';
-import { CampaignValidationRecord, QuizVibeDatabaseRepository } from '../db/repository.js';
+import {
+  CampaignValidationRecord,
+  DatabaseOperationError,
+  hashVietnamesePhone,
+  normalizeVietnamesePhone,
+  QuizVibeDatabaseRepository,
+} from '../db/repository.js';
 import type { CompleteCampaignRecord, QuizSessionInsert } from '../db/types.js';
 import { campaignValidationCache } from './campaignCache.js';
 import {
@@ -360,7 +366,7 @@ export class QuizService {
       throw new QuizError('INVALID_LEAD_DATA', 'Họ và tên phải có ít nhất 2 ký tự.', 400);
     }
 
-    const cleanPhone = (phoneNumber || '').trim().replace(/\s+/g, '');
+    const cleanPhone = normalizeVietnamesePhone(phoneNumber);
     if (!VIETNAMESE_PHONE_REGEX.test(cleanPhone)) {
       throw new QuizError(
         'INVALID_LEAD_DATA',
@@ -369,18 +375,44 @@ export class QuizService {
       );
     }
 
+    const phoneHash = hashVietnamesePhone(cleanPhone);
+    const existingPhoneLead = await this.repo.getLeadByCampaignPhoneHash(
+      session.campaign_id,
+      phoneHash
+    );
+    if (existingPhoneLead) {
+      throw new QuizError(
+        'PHONE_ALREADY_REGISTERED',
+        'Số điện thoại này đã được sử dụng để nhận ưu đãi trong chương trình. Mỗi số điện thoại chỉ được nhận Voucher một lần.',
+        409
+      );
+    }
+
     const voucherRecord = await this.repo.getVoucherByCampaignId(session.campaign_id);
     const voucherCode = voucherRecord ? voucherRecord.code : null;
 
-    const lead = await this.repo.createLeadForCampaign({
-      campaign_id: session.campaign_id,
-      quiz_session_id: session.id,
-      full_name: cleanName,
-      phone_number: cleanPhone,
-      score: session.total_score,
-      time_taken_seconds: session.time_taken_seconds,
-      voucher_code: voucherCode,
-    });
+    let lead;
+    try {
+      lead = await this.repo.createLeadForCampaign({
+        campaign_id: session.campaign_id,
+        quiz_session_id: session.id,
+        full_name: cleanName,
+        phone_number: cleanPhone,
+        phone_hash: phoneHash,
+        score: session.total_score,
+        time_taken_seconds: session.time_taken_seconds,
+        voucher_code: voucherCode,
+      });
+    } catch (error) {
+      if (error instanceof DatabaseOperationError && error.code === 'PHONE_ALREADY_REGISTERED') {
+        throw new QuizError(
+          'PHONE_ALREADY_REGISTERED',
+          'Số điện thoại này đã được sử dụng để nhận ưu đãi trong chương trình. Mỗi số điện thoại chỉ được nhận Voucher một lần.',
+          409
+        );
+      }
+      throw error;
+    }
 
     const rank = await this.repo.getLeadRank(
       session.campaign_id,

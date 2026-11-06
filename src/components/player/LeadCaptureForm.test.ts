@@ -63,6 +63,11 @@ describe('Story 4.2: LeadCaptureForm & Vietnamese Phone Lead Capture', () => {
       expect(res.sanitized).toBe('0987654321');
     });
 
+    it('normalizes equivalent international Vietnamese formats to the same phone', () => {
+      expect(validateVietnamesePhone('+84 987 654 321').sanitized).toBe('0987654321');
+      expect(validateVietnamesePhone('84987654321').sanitized).toBe('0987654321');
+    });
+
     it('rejects invalid prefix 01 or 02 or 04 (e.g. 0123456789 per TC-03)', () => {
       const res = validateVietnamesePhone('0123456789');
       expect(res.valid).toBe(false);
