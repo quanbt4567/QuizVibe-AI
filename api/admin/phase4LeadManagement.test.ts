@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
-import { FakePostgrest, FAKE_SUPABASE_HOST } from '../lib/testing/fakePostgrest';
-import { mockHttp, tokenFromSetCookie } from '../lib/testing/httpMock';
+import { FakePostgrest, FAKE_SUPABASE_HOST } from '../_lib/testing/fakePostgrest';
+import { mockHttp, tokenFromSetCookie } from '../_lib/testing/httpMock';
 
 const fake = new FakePostgrest();
 let restoreFetch: () => void;

@@ -4,7 +4,7 @@ import {
   serializeSessionCookie,
   verifyAdminRequest,
   adminAuthFailureStatus,
-} from '../lib/auth';
+} from '../_lib/auth';
 
 ensureServerEnvLoaded();
 

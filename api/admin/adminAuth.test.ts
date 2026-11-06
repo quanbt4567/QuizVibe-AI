@@ -11,11 +11,11 @@ import {
   resetAdminAuthTestState,
   validateAdminAuthEnv,
   verifyAdminSessionToken,
-} from '../lib/auth';
+} from '../_lib/auth';
 import {
   classifyPostgrestRlsOutcome,
   runRlsPreflightCheck,
-} from '../lib/db';
+} from '../_lib/db';
 
 const TEST_ADMIN_PASSWORD = 'QuizVibe_Admin_Strong_Pass_2026!';
 const TEST_SESSION_SECRET = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';

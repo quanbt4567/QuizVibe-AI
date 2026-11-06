@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import handler from './generate-quiz';
-import { AIProviderRouter } from './lib/router';
+import { AIProviderRouter } from './_lib/router';
 
-vi.mock('./lib/router');
+vi.mock('./_lib/router');
 
 describe('Story 2.2: Serverless HTTP Endpoint /api/generate-quiz', () => {
   beforeEach(() => {

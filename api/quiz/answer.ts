@@ -1,5 +1,5 @@
-import { ensureServerEnvLoaded } from '../lib/auth';
-import { QuizService, QuizError } from '../lib/quiz';
+import { ensureServerEnvLoaded } from '../_lib/auth';
+import { QuizService, QuizError } from '../_lib/quiz';
 
 ensureServerEnvLoaded();
 

@@ -76,12 +76,12 @@ function installFetchStub() {
   }) as typeof fetch;
 }
 
-type AuthModule = typeof import('../lib/auth/adminAuth');
+type AuthModule = typeof import('../_lib/auth/adminAuth');
 
 /** A brand-new module registry == a brand-new serverless instance with empty process memory. */
 async function freshInstance(): Promise<AuthModule> {
   vi.resetModules();
-  return import('../lib/auth/adminAuth');
+  return import('../_lib/auth/adminAuth');
 }
 
 async function loadHandlers() {

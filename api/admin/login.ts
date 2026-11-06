@@ -9,7 +9,7 @@ import {
   recordFailedLoginAttempt,
   validateAdminAuthEnv,
   verifyAdminPassword,
-} from '../lib/auth';
+} from '../_lib/auth';
 
 ensureServerEnvLoaded();
 

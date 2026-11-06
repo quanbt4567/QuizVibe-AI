@@ -13,7 +13,7 @@ export class ServerOnlyModuleError extends Error {
   public readonly code: SupabaseConfigErrorCode = 'SERVER_ONLY_VIOLATION';
 
   constructor(
-    message = 'SECURITY_VIOLATION: Server-side database module (api/lib/db) cannot be imported or executed in a browser environment.'
+    message = 'SECURITY_VIOLATION: Server-side database module (api/_lib/db) cannot be imported or executed in a browser environment.'
   ) {
     super(message);
     this.name = 'ServerOnlyModuleError';

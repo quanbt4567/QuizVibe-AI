@@ -1,10 +1,10 @@
 // @vitest-environment node
 import crypto from 'node:crypto';
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
-import { FakePostgrest, FAKE_SUPABASE_HOST } from '../lib/testing/fakePostgrest';
-import { mockHttp } from '../lib/testing/httpMock';
-import { calculateSpeedScore } from '../lib/quiz/quizScoring';
-import { QuizVibeDatabaseRepository } from '../lib/db/repository';
+import { FakePostgrest, FAKE_SUPABASE_HOST } from '../_lib/testing/fakePostgrest';
+import { mockHttp } from '../_lib/testing/httpMock';
+import { calculateSpeedScore } from '../_lib/quiz/quizScoring';
+import { QuizVibeDatabaseRepository } from '../_lib/db/repository';
 
 const fake = new FakePostgrest();
 let restoreFetch: () => void;

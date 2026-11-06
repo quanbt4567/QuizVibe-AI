@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
-import { FakePostgrest, FAKE_SUPABASE_HOST } from './lib/testing/fakePostgrest';
-import { mockHttp, tokenFromSetCookie } from './lib/testing/httpMock';
-import { ADMIN_SESSION_COOKIE_NAME } from './lib/auth/adminAuth';
+import { FakePostgrest, FAKE_SUPABASE_HOST } from './_lib/testing/fakePostgrest';
+import { mockHttp, tokenFromSetCookie } from './_lib/testing/httpMock';
+import { ADMIN_SESSION_COOKIE_NAME } from './_lib/auth/adminAuth';
 
 /**
  * Phase 5 — Comprehensive End-to-End Integration & Product Acceptance Test Suite.

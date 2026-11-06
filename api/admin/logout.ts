@@ -1,7 +1,7 @@
 import {
   ensureServerEnvLoaded,
   revokeAdminSessionFromRequest,
-} from '../lib/auth';
+} from '../_lib/auth';
 
 ensureServerEnvLoaded();
 

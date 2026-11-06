@@ -2,15 +2,15 @@ import {
   adminAuthFailureStatus,
   ensureServerEnvLoaded,
   verifyAdminRequest,
-} from '../lib/auth';
+} from '../_lib/auth';
 import {
   CAMPAIGN_TRANSITION_ACTIONS,
   CampaignService,
   CampaignServiceError,
   CampaignTransitionAction,
-} from '../lib/campaigns';
-import { QuizVibeDatabaseRepository } from '../lib/db/repository';
-import type { CampaignStatus } from '../lib/db/types';
+} from '../_lib/campaigns';
+import { QuizVibeDatabaseRepository } from '../_lib/db/repository';
+import type { CampaignStatus } from '../_lib/db/types';
 
 ensureServerEnvLoaded();
 

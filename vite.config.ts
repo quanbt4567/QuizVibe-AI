@@ -21,7 +21,12 @@ function serverOnlyDbBoundaryPlugin(): Plugin {
           ? path.resolve(path.dirname(importer), source).replace(/\\/g, '/')
           : normalizedSource;
 
-        if (resolved.includes('/api/lib/db') || resolved.includes('/api/lib/auth')) {
+        if (
+          resolved.includes('/api/_lib/db') ||
+          resolved.includes('/api/_lib/auth') ||
+          resolved.includes('/api/lib/db') ||
+          resolved.includes('/api/lib/auth')
+        ) {
           throw new Error(
             `SECURITY_VIOLATION: Client module "${importer}" attempted to import server-only module "${source}".`
           );

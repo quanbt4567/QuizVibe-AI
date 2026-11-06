@@ -1,5 +1,5 @@
-import { ensureServerEnvLoaded } from '../lib/auth';
-import { CampaignService, CampaignServiceError } from '../lib/campaigns';
+import { ensureServerEnvLoaded } from '../_lib/auth';
+import { CampaignService, CampaignServiceError } from '../_lib/campaigns';
 
 ensureServerEnvLoaded();
 
