@@ -155,7 +155,7 @@ export class QuizService {
       );
     }
 
-    const questions = await this.repo.getCampaignQuestionsByCampaignId(session.campaign_id);
+    const questions = campaignRecord.questions;
     const targetQ = questions.find((q) => q.question_order === questionIndex);
     if (!targetQ) {
       throw new QuizError('INVALID_ANSWER_PAYLOAD', 'Không tìm thấy câu hỏi tương ứng.', 404);

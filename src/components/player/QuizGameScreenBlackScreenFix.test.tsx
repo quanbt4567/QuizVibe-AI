@@ -436,8 +436,8 @@ describe('Production Bug Fix: QuizGameScreen Black Screen & Explanation Resilien
     expect(submitSpy).toHaveBeenCalledTimes(1);
   });
 
-  // Scenario 9: Network error during answer submission → Verify error handled gracefully, no crash.
-  it('Scenario 9: Network error during answer submission triggers onExitToWelcome gracefully without black screen', async () => {
+  // Scenario 9: Network error during answer submission → Verify error handled gracefully with retry option, no crash.
+  it('Scenario 9: Network error during answer submission displays error banner gracefully without black screen', async () => {
     const onExitMock = vi.fn();
     vi.spyOn(playerApi, 'submitAnswer').mockRejectedValueOnce(
       new Error('Failed to fetch')
@@ -461,7 +461,8 @@ describe('Production Bug Fix: QuizGameScreen Black Screen & Explanation Resilien
       await Promise.resolve();
     });
 
-    // Should call onExitToWelcome gracefully
-    expect(onExitMock).toHaveBeenCalledTimes(1);
+    // Should display error notification without crashing
+    expect(container.textContent).toContain('Không thể gửi đáp án lên máy chủ');
+    expect(container.textContent).toContain('Thử lại');
   });
 });

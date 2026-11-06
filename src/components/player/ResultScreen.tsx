@@ -18,7 +18,12 @@ import {
 } from 'lucide-react';
 import { Campaign, Lead } from '../../types';
 import { QuizGameSessionResult, QuestionPlayResult } from '../../services/scoring';
-import { shareQuizResult } from '../../services/sharing';
+import {
+  shareToFacebook,
+  loadFacebookSdk,
+  generateShareMessage,
+} from '../../services/sharing';
+import { copyToClipboard } from '../../services/clipboard';
 import { LeadCaptureForm } from './LeadCaptureForm';
 import { LeaderboardModal } from './LeaderboardModal';
 import { Card } from '../ui/card';
@@ -154,6 +159,11 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     }
   }, [manualShareText]);
 
+  // Pre-load Facebook SDK on mount for responsive sharing
+  useEffect(() => {
+    loadFacebookSdk().catch(() => {});
+  }, []);
+
   const handleShare = async () => {
     if (isSharingRef.current || !result) return;
     if (document.activeElement instanceof HTMLElement) {
@@ -163,30 +173,75 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     setIsSharing(true);
 
     try {
-      const outcome = await shareQuizResult({
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const targetSlug = campaignSlug || campaign?.slug;
+      const quizUrl = targetSlug ? `${origin}/quiz/${targetSlug}` : (origin || 'https://quiz-vibe-ai.vercel.app');
+
+      const { text } = generateShareMessage({
         score: result.totalScore,
         campaignTitle: campaign?.title,
         voucherDiscount: submittedLeadId ? campaign?.voucher?.discount : undefined,
+        quizUrl,
+      });
+
+      const outcome = await shareToFacebook({
+        url: quizUrl,
+        quote: text,
+        hashtag: '#QuizVibeAI',
       });
 
       if (outcome.status === 'shared') {
-        const msg = 'Đã mở chia sẻ thành công!';
-        if (onShareNotice) {
-          onShareNotice(msg);
-        } else {
-          setShareFeedback(msg);
-          setTimeout(() => setShareFeedback(null), 3000);
-        }
-      } else if (outcome.status === 'copied') {
-        const msg = 'Đã sao chép nội dung chia sẻ! Bạn có thể dán đăng lên Facebook ngay.';
+        const msg = 'Đã chia sẻ thành công lên Facebook! 🎉';
         if (onShareNotice) {
           onShareNotice(msg);
         } else {
           setShareFeedback(msg);
           setTimeout(() => setShareFeedback(null), 3500);
         }
-      } else if (outcome.status === 'manual') {
-        setManualShareText(outcome.text);
+      } else if (outcome.status === 'opened') {
+        const msg = 'Đã mở cửa sổ chia sẻ Facebook.';
+        if (onShareNotice) {
+          onShareNotice(msg);
+        } else {
+          setShareFeedback(msg);
+          setTimeout(() => setShareFeedback(null), 3000);
+        }
+      } else if (outcome.status === 'cancelled') {
+        const msg = 'Đã huỷ chia sẻ Facebook.';
+        if (onShareNotice) {
+          onShareNotice(msg);
+        } else {
+          setShareFeedback(msg);
+          setTimeout(() => setShareFeedback(null), 2500);
+        }
+      } else if (outcome.status === 'blocked') {
+        const clip = await copyToClipboard(text);
+        const msg = clip.success
+          ? 'Cửa sổ chia sẻ bị chặn. Đã sao chép nội dung thử thách để bạn dán lên Facebook!'
+          : 'Cửa sổ chia sẻ bị chặn. Vui lòng cho phép mở popup trên trình duyệt.';
+        if (onShareNotice) {
+          onShareNotice(msg);
+        } else {
+          setShareFeedback(msg);
+          setTimeout(() => setShareFeedback(null), 4000);
+        }
+        if (!clip.success) {
+          setManualShareText(text);
+        }
+      } else {
+        const clip = await copyToClipboard(text);
+        const msg = clip.success
+          ? 'Đã sao chép nội dung chia sẻ để bạn đăng lên Facebook!'
+          : 'Không thể mở Facebook. Bạn có thể sao chép liên kết thử thách.';
+        if (onShareNotice) {
+          onShareNotice(msg);
+        } else {
+          setShareFeedback(msg);
+          setTimeout(() => setShareFeedback(null), 3500);
+        }
+        if (!clip.success) {
+          setManualShareText(text);
+        }
       }
     } catch {
       // Graceful fallback

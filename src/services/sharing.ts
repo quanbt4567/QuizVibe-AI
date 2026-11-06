@@ -1,4 +1,12 @@
 import { copyToClipboard } from './clipboard';
+export {
+  shareToFacebook,
+  loadFacebookSdk,
+  openCenteredPopup,
+  getFacebookAppId,
+  type FacebookShareOptions,
+  type FacebookShareOutcome,
+} from './facebookShare';
 
 export interface ShareContentParams {
   score: number;

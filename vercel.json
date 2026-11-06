@@ -2,9 +2,30 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/quiz/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Discordbot|Slackbot).*"
+        }
+      ],
+      "destination": "/api/og?slug=:slug"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Discordbot|Slackbot).*"
+        }
+      ],
+      "destination": "/api/og"
+    },
+    {
       "source": "/((?!assets|src|node_modules|api|@|[^?]*\\.(?:html|css|js|ts|tsx|jsx|json|png|jpg|svg|ico)).*)",
       "destination": "/index.html"
     }
   ]
 }
-

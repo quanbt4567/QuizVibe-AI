@@ -9,6 +9,8 @@ import {
   Lightbulb,
   Award,
   Zap,
+  Loader2,
+  RefreshCw,
 } from 'lucide-react';
 import { Campaign, Question } from '../../types';
 import { useCountdownTimer, TimerUrgency } from '../../hooks';
@@ -96,6 +98,7 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
   // Per-question feedback from server (for server-authoritative sessions)
   const [serverExplanation, setServerExplanation] = useState<string | null>(null);
   const [serverCorrectIndex, setServerCorrectIndex] = useState<number | null>(null);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
 
   // Synchronous mutual-exclusion lock ref to prevent race conditions
   const isLockedRef = useRef<boolean>(false);
@@ -139,6 +142,7 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
         setAwardedScore(null);
         setServerExplanation(null);
         setServerCorrectIndex(null);
+        setSubmissionError(null);
         isLockedRef.current = false;
         isAdvancingRef.current = false;
 
@@ -231,6 +235,7 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
               setAwardedScore(null);
               setServerExplanation(null);
               setServerCorrectIndex(null);
+              setSubmissionError(null);
               isLockedRef.current = false;
               isAdvancingRef.current = false;
               timer.reset(30);
@@ -288,6 +293,80 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
 
   const urgencyClasses = getUrgencyClasses(timer.urgency);
 
+  const submitServerAnswer = (index: number) => {
+    if (!initialSession) return;
+    setSubmissionError(null);
+    isLockedRef.current = true;
+
+    playerApi
+      .submitAnswer(initialSession.sessionToken, currentQuestionIndex, index)
+      .then((res) => {
+        setSubmissionError(null);
+        setAwardedScore(res.pointsEarned);
+        setTotalScore(res.totalScore);
+        if (typeof res.correctIndex === 'number') {
+          setServerCorrectIndex(res.correctIndex);
+        }
+        if (typeof res.explanation === 'string' && res.explanation.trim().length > 0) {
+          setServerExplanation(res.explanation);
+        } else {
+          setServerExplanation(null);
+        }
+
+        const questionResult: QuestionPlayResult = {
+          questionIndex: currentQuestionIndex,
+          questionId: `q_${currentQuestionIndex + 1}`,
+          question: activeQuestionText,
+          options: activeOptions,
+          selectedOptionIndex: index,
+          correctIndex: typeof res.correctIndex === 'number' ? res.correctIndex : (res.isCorrect ? index : -1),
+          isCorrect: res.isCorrect,
+          timeRemainingSeconds: Math.round(res.pointsEarned > 100 ? (res.pointsEarned - 100) / 10 : 0),
+          timeSpentSeconds: 30 - Math.round(res.pointsEarned > 100 ? (res.pointsEarned - 100) / 10 : 0),
+          score: res.pointsEarned,
+          explanation: res.explanation ?? undefined,
+        };
+
+        const nextResults = [...questionResults, questionResult];
+        setQuestionResults(nextResults);
+
+        advanceTimeoutRef.current = setTimeout(() => {
+          if (res.isComplete) {
+            if (!hasCompletedRef.current) {
+              hasCompletedRef.current = true;
+              onQuizCompleted?.({
+                campaignId: initialSession.campaignId,
+                totalScore: res.totalScore,
+                totalCorrect: res.result?.correctCount ?? nextResults.filter((r) => r.isCorrect).length,
+                totalQuestions: 5,
+                totalTimeSpentSeconds: res.result?.timeTakenSeconds ?? nextResults.reduce((a, b) => a + b.timeSpentSeconds, 0),
+                results: nextResults,
+                completedAt: new Date().toISOString(),
+              });
+            }
+          } else if (res.nextQuestion) {
+            setServerQuestion(res.nextQuestion);
+            setCurrentQuestionIndex(res.nextQuestion.questionIndex);
+            setSelectedOptionIndex(null);
+            setIsAnswered(false);
+            setTimeoutOccurred(false);
+            setAwardedScore(null);
+            setServerExplanation(null);
+            setServerCorrectIndex(null);
+            setSubmissionError(null);
+            isLockedRef.current = false;
+            isAdvancingRef.current = false;
+            timer.reset(30);
+          }
+        }, answerTransitionDelayMs);
+      })
+      .catch((err) => {
+        console.warn('[QuizGame] Submit answer error:', err);
+        setSubmissionError('Không thể gửi đáp án lên máy chủ. Vui lòng kiểm tra kết nối mạng và thử lại.');
+        isLockedRef.current = false;
+      });
+  };
+
   // Answer selection handler with Speed Scoring (FR-203, TC-02)
   const handleSelectOption = (index: number) => {
     // Guard against duplicate taps, late clicks, or clicks after timeout
@@ -306,6 +385,7 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
 
     // Immediately lock interaction
     isLockedRef.current = true;
+    setSubmissionError(null);
     setIsAnswered(true);
     setSelectedOptionIndex(index);
 
@@ -313,69 +393,7 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
     timer.pause();
 
     if (initialSession) {
-      playerApi
-        .submitAnswer(initialSession.sessionToken, currentQuestionIndex, index)
-        .then((res) => {
-          setAwardedScore(res.pointsEarned);
-          setTotalScore(res.totalScore);
-          if (typeof res.correctIndex === 'number') {
-            setServerCorrectIndex(res.correctIndex);
-          }
-          if (typeof res.explanation === 'string' && res.explanation.trim().length > 0) {
-            setServerExplanation(res.explanation);
-          } else {
-            setServerExplanation(null);
-          }
-
-          const questionResult: QuestionPlayResult = {
-            questionIndex: currentQuestionIndex,
-            questionId: `q_${currentQuestionIndex + 1}`,
-            question: activeQuestionText,
-            options: activeOptions,
-            selectedOptionIndex: index,
-            correctIndex: typeof res.correctIndex === 'number' ? res.correctIndex : (res.isCorrect ? index : -1),
-            isCorrect: res.isCorrect,
-            timeRemainingSeconds: Math.round(res.pointsEarned > 100 ? (res.pointsEarned - 100) / 10 : 0),
-            timeSpentSeconds: 30 - Math.round(res.pointsEarned > 100 ? (res.pointsEarned - 100) / 10 : 0),
-            score: res.pointsEarned,
-            explanation: res.explanation ?? undefined,
-          };
-
-          const nextResults = [...questionResults, questionResult];
-          setQuestionResults(nextResults);
-
-          advanceTimeoutRef.current = setTimeout(() => {
-            if (res.isComplete) {
-              if (!hasCompletedRef.current) {
-                hasCompletedRef.current = true;
-                onQuizCompleted?.({
-                  campaignId: initialSession.campaignId,
-                  totalScore: res.totalScore,
-                  totalCorrect: res.result?.correctCount ?? nextResults.filter((r) => r.isCorrect).length,
-                  totalQuestions: 5,
-                  totalTimeSpentSeconds: res.result?.timeTakenSeconds ?? nextResults.reduce((a, b) => a + b.timeSpentSeconds, 0),
-                  results: nextResults,
-                  completedAt: new Date().toISOString(),
-                });
-              }
-            } else if (res.nextQuestion) {
-              setServerQuestion(res.nextQuestion);
-              setCurrentQuestionIndex(res.nextQuestion.questionIndex);
-              setSelectedOptionIndex(null);
-              setIsAnswered(false);
-              setTimeoutOccurred(false);
-              setAwardedScore(null);
-              setServerExplanation(null);
-              setServerCorrectIndex(null);
-              isLockedRef.current = false;
-              isAdvancingRef.current = false;
-              timer.reset(30);
-            }
-          }, answerTransitionDelayMs);
-        })
-        .catch(() => {
-          onExitToWelcome();
-        });
+      submitServerAnswer(index);
       return;
     }
 
@@ -405,6 +423,11 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
     advanceTimeoutRef.current = setTimeout(() => {
       advanceToNextQuestion(questionResult);
     }, answerTransitionDelayMs);
+  };
+
+  const handleRetryAnswer = () => {
+    if (selectedOptionIndex === null || !initialSession) return;
+    submitServerAnswer(selectedOptionIndex);
   };
 
   // If campaign is missing or empty, fallback gracefully
@@ -555,9 +578,9 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
             if (isAnswered) {
               if (isSelected) {
                 if (initialSession && awardedScore === null) {
-                  // Pending server verification flash
+                  // Immediate visual pressed/selected & verifying state
                   optionStyling =
-                    'border-primary border-b-primary-depth bg-primary/20 text-foreground cursor-default';
+                    'border-primary/80 border-b-2 translate-y-[2px] bg-primary/25 text-foreground cursor-default ring-1 ring-primary/40 shadow-inner';
                   badgeStyling = 'border-primary/60 bg-primary/30 text-primary-200';
                 } else if (isCorrectSelection) {
                   // Chosen & Correct
@@ -614,6 +637,8 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
                       ) : (
                         <X className="w-4 h-4 stroke-[3]" />
                       )
+                    ) : isAnswered && isSelected && initialSession && awardedScore === null ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-primary-300" />
                     ) : (
                       letter
                     )}
@@ -624,16 +649,25 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
                 </div>
 
                 {/* State Tag Feedback */}
-                {isAnswered && isSelected && awardedScore !== null && (
-                  <span
-                    className={`shrink-0 rounded-md px-2 py-0.5 font-mono tabular-nums text-[11px] font-bold ${
-                      isCorrectSelection
-                        ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
-                        : 'bg-rose-500/25 text-rose-300 border border-rose-500/40'
-                    }`}
-                  >
-                    {isCorrectSelection ? `+${awardedScore}đ` : '+0đ'}
-                  </span>
+                {isAnswered && isSelected && (
+                  initialSession && awardedScore === null ? (
+                    <span className="shrink-0 inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 font-mono text-[11px] font-semibold text-primary-300 bg-primary/20 border border-primary/35 animate-pulse">
+                      <Loader2 className="w-3 h-3 animate-spin text-primary-400" />
+                      <span>Đang kiểm tra...</span>
+                    </span>
+                  ) : (
+                    awardedScore !== null && (
+                      <span
+                        className={`shrink-0 rounded-md px-2 py-0.5 font-mono tabular-nums text-[11px] font-bold ${
+                          isCorrectSelection
+                            ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
+                            : 'bg-rose-500/25 text-rose-300 border border-rose-500/40'
+                        }`}
+                      >
+                        {isCorrectSelection ? `+${awardedScore}đ` : '+0đ'}
+                      </span>
+                    )
+                  )
                 )}
 
                 {hasEnded && !isSelected && isCorrectOption && (
@@ -645,6 +679,26 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
             );
           })}
         </div>
+
+        {/* Submission Error Banner & Retry */}
+        {submissionError && (
+          <div className="rounded-xl border border-rose-500/40 bg-rose-950/40 p-3 text-xs text-rose-200 flex items-center justify-between gap-3 animate-fadeIn">
+            <div className="flex items-center gap-2 min-w-0">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+              <span className="leading-snug">{submissionError}</span>
+            </div>
+            <Button
+              type="button"
+              variant="tactile-secondary"
+              size="compact"
+              onClick={handleRetryAnswer}
+              className="shrink-0 gap-1.5 text-xs text-rose-200 border-rose-500/40 hover:bg-rose-500/20"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Thử lại</span>
+            </Button>
+          </div>
+        )}
 
         {/* Question Explanation Card (Shown on answer or timeout when explanation is present) */}
         {hasEnded && Boolean(activeExplanation) && (
