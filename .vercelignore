@@ -1,0 +1,2 @@
+# Exclude API test files from Vercel Serverless Function discovery
+api/**/*.test.ts
