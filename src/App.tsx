@@ -3,6 +3,7 @@ import { CheckCircle2, X, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { PublicPlayerLayout } from './components/common/PublicPlayerLayout';
 import { AdminLayout } from './components/common/AdminLayout';
 import { NotFoundScreen } from './components/common/NotFoundScreen';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { AdminLoginScreen } from './components/admin/AdminLoginScreen';
 import { PublicCampaignScreen } from './components/player';
 import { AdminDashboard } from './components/admin/AdminDashboard';
@@ -298,7 +299,9 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      <PublicCampaignScreen campaign={publicCampaign} />
+      <ErrorBoundary>
+        <PublicCampaignScreen campaign={publicCampaign} />
+      </ErrorBoundary>
     </PublicPlayerLayout>
   );
 };

@@ -20,6 +20,7 @@ import { LeaderboardModal } from './LeaderboardModal';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Card } from '../ui/card';
+import { ErrorBoundary } from '../common/ErrorBoundary';
 
 export interface PublicCampaignScreenProps {
   campaign: PublicCampaign;
@@ -55,32 +56,34 @@ export const PublicCampaignScreen: React.FC<PublicCampaignScreenProps> = ({ camp
 
   if (stage === 'playing' && session) {
     return (
-      <QuizGameScreen
-        initialSession={session}
-        campaign={{
-          id: campaign.id,
-          title: campaign.title,
-          description: campaign.description,
-          industry: campaign.industry,
-          questions: [],
-          voucher: campaign.voucher
-            ? {
-                code: '',
-                discount: campaign.voucher.discount,
-                description: campaign.voucher.description,
-                expiryDate: campaign.voucher.expiryDate,
-                terms: campaign.voucher.terms,
-              }
-            : { code: '', discount: '', description: '' },
-          createdAt: '',
-          updatedAt: '',
-        }}
-        onExitToWelcome={() => setStage('landing')}
-        onQuizCompleted={(res) => {
-          setQuizResult(res);
-          setStage('result');
-        }}
-      />
+      <ErrorBoundary onReset={() => setStage('landing')}>
+        <QuizGameScreen
+          initialSession={session}
+          campaign={{
+            id: campaign.id,
+            title: campaign.title,
+            description: campaign.description,
+            industry: campaign.industry,
+            questions: [],
+            voucher: campaign.voucher
+              ? {
+                  code: '',
+                  discount: campaign.voucher.discount,
+                  description: campaign.voucher.description,
+                  expiryDate: campaign.voucher.expiryDate,
+                  terms: campaign.voucher.terms,
+                }
+              : { code: '', discount: '', description: '' },
+            createdAt: '',
+            updatedAt: '',
+          }}
+          onExitToWelcome={() => setStage('landing')}
+          onQuizCompleted={(res) => {
+            setQuizResult(res);
+            setStage('result');
+          }}
+        />
+      </ErrorBoundary>
     );
   }
 

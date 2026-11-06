@@ -246,8 +246,11 @@ describe('Phase 4: Player Sessions & Server-Side Scoring Engine', () => {
       expect(body.answer.pointsEarned).toBeLessThanOrEqual(400);
       expect(body.answer.totalScore).toBe(body.answer.pointsEarned);
       expect(body.answer.isComplete).toBe(false);
+      expect(body.answer.correctIndex).toBe(1);
       expect(body.answer.nextQuestion.questionIndex).toBe(1);
       expect(body.answer.nextQuestion.questionText).toBe('Nội dung câu hỏi số 2?');
+      expect(body.answer.nextQuestion).not.toHaveProperty('correctIndex');
+      expect(body.answer.nextQuestion).not.toHaveProperty('explanation');
 
       // Zero answer leakage
       expect(JSON.stringify(body)).not.toContain('correct_index');

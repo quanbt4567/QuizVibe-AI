@@ -93,6 +93,10 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
   const [timeoutOccurred, setTimeoutOccurred] = useState<boolean>(false);
   const [awardedScore, setAwardedScore] = useState<number | null>(null);
 
+  // Per-question feedback from server (for server-authoritative sessions)
+  const [serverExplanation, setServerExplanation] = useState<string | null>(null);
+  const [serverCorrectIndex, setServerCorrectIndex] = useState<number | null>(null);
+
   // Synchronous mutual-exclusion lock ref to prevent race conditions
   const isLockedRef = useRef<boolean>(false);
   const isAdvancingRef = useRef<boolean>(false);
@@ -133,6 +137,8 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
         setIsAnswered(false);
         setTimeoutOccurred(false);
         setAwardedScore(null);
+        setServerExplanation(null);
+        setServerCorrectIndex(null);
         isLockedRef.current = false;
         isAdvancingRef.current = false;
 
@@ -176,17 +182,27 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
       playerApi
         .submitAnswer(initialSession.sessionToken, currentQuestionIndex, null)
         .then((res) => {
+          if (typeof res.correctIndex === 'number') {
+            setServerCorrectIndex(res.correctIndex);
+          }
+          if (typeof res.explanation === 'string' && res.explanation.trim().length > 0) {
+            setServerExplanation(res.explanation);
+          } else {
+            setServerExplanation(null);
+          }
+
           const qResult: QuestionPlayResult = {
             questionIndex: currentQuestionIndex,
             questionId: `q_${currentQuestionIndex + 1}`,
             question: activeQuestionText,
             options: activeOptions,
             selectedOptionIndex: null,
-            correctIndex: -1,
+            correctIndex: typeof res.correctIndex === 'number' ? res.correctIndex : -1,
             isCorrect: false,
             timeRemainingSeconds: 0,
             timeSpentSeconds: 30,
             score: 0,
+            explanation: res.explanation ?? undefined,
           };
 
           const nextResults = [...questionResults, qResult];
@@ -213,6 +229,8 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
               setIsAnswered(false);
               setTimeoutOccurred(false);
               setAwardedScore(null);
+              setServerExplanation(null);
+              setServerCorrectIndex(null);
               isLockedRef.current = false;
               isAdvancingRef.current = false;
               timer.reset(30);
@@ -300,6 +318,14 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
         .then((res) => {
           setAwardedScore(res.pointsEarned);
           setTotalScore(res.totalScore);
+          if (typeof res.correctIndex === 'number') {
+            setServerCorrectIndex(res.correctIndex);
+          }
+          if (typeof res.explanation === 'string' && res.explanation.trim().length > 0) {
+            setServerExplanation(res.explanation);
+          } else {
+            setServerExplanation(null);
+          }
 
           const questionResult: QuestionPlayResult = {
             questionIndex: currentQuestionIndex,
@@ -307,11 +333,12 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
             question: activeQuestionText,
             options: activeOptions,
             selectedOptionIndex: index,
-            correctIndex: -1,
+            correctIndex: typeof res.correctIndex === 'number' ? res.correctIndex : (res.isCorrect ? index : -1),
             isCorrect: res.isCorrect,
             timeRemainingSeconds: Math.round(res.pointsEarned > 100 ? (res.pointsEarned - 100) / 10 : 0),
             timeSpentSeconds: 30 - Math.round(res.pointsEarned > 100 ? (res.pointsEarned - 100) / 10 : 0),
             score: res.pointsEarned,
+            explanation: res.explanation ?? undefined,
           };
 
           const nextResults = [...questionResults, questionResult];
@@ -338,6 +365,8 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
               setIsAnswered(false);
               setTimeoutOccurred(false);
               setAwardedScore(null);
+              setServerExplanation(null);
+              setServerCorrectIndex(null);
               isLockedRef.current = false;
               isAdvancingRef.current = false;
               timer.reset(30);
@@ -403,6 +432,11 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
 
   const optionLetters = ['A', 'B', 'C', 'D'];
   const hasEnded = isAnswered || timeoutOccurred || timer.hasTimedOut;
+  const rawExplanation = serverExplanation ?? currentQuestion?.explanation ?? null;
+  const activeExplanation =
+    typeof rawExplanation === 'string' && rawExplanation.trim().length > 0
+      ? rawExplanation.trim()
+      : null;
 
   return (
     <div className="mx-auto w-full max-w-[480px] px-4 py-4 sm:py-7">
@@ -497,7 +531,14 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
         <div className="space-y-2.5" role="group" aria-label="Các phương án trả lời">
           {activeOptions.map((optionText, idx) => {
             const isSelected = selectedOptionIndex === idx;
-            const isCorrectOption = currentQuestion ? idx === currentQuestion.correctIndex : false;
+            const resolvedCorrectIndex =
+              serverCorrectIndex !== null
+                ? serverCorrectIndex
+                : currentQuestion
+                ? currentQuestion.correctIndex
+                : null;
+            const isCorrectOption =
+              resolvedCorrectIndex !== null ? idx === resolvedCorrectIndex : false;
             const letter = optionLetters[idx];
 
             // Consistent border-2 border-b-4 geometry so choices never shift or reflow unpredictably
@@ -506,12 +547,19 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
             let badgeStyling =
               'border border-border-tactile bg-card text-content-secondary group-hover:border-primary/50 group-hover:text-primary-300';
 
+            const isCorrectSelection =
+              initialSession
+                ? awardedScore !== null && awardedScore > 0
+                : isCorrectOption;
+
             if (isAnswered) {
               if (isSelected) {
-                const isCorrectFeedback = initialSession
-                  ? awardedScore !== null && awardedScore > 0
-                  : isCorrectOption;
-                if (isCorrectFeedback) {
+                if (initialSession && awardedScore === null) {
+                  // Pending server verification flash
+                  optionStyling =
+                    'border-primary border-b-primary-depth bg-primary/20 text-foreground cursor-default';
+                  badgeStyling = 'border-primary/60 bg-primary/30 text-primary-200';
+                } else if (isCorrectSelection) {
                   // Chosen & Correct
                   optionStyling =
                     'border-emerald-500 border-b-emerald-700 bg-emerald-500/15 text-emerald-50 cursor-default';
@@ -522,8 +570,8 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
                     'border-rose-500 border-b-rose-700 bg-rose-500/15 text-rose-50 cursor-default';
                   badgeStyling = 'border-rose-400 bg-rose-500 text-white';
                 }
-              } else if (!initialSession && isCorrectOption) {
-                // Not chosen, but revealed as the correct answer in local legacy mode
+              } else if (resolvedCorrectIndex !== null && idx === resolvedCorrectIndex) {
+                // Not chosen, but revealed as the correct answer
                 optionStyling =
                   'border-emerald-500/70 border-b-emerald-800 bg-emerald-500/10 text-emerald-200 cursor-default';
                 badgeStyling = 'border-emerald-500/50 bg-emerald-500/25 text-emerald-300';
@@ -534,8 +582,8 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
                 badgeStyling = 'border-border-subtle bg-card/50 text-content-muted';
               }
             } else if (timeoutOccurred) {
-              if (!initialSession && isCorrectOption) {
-                // Reveal correct answer upon timeout in legacy local mode only
+              if (resolvedCorrectIndex !== null && idx === resolvedCorrectIndex) {
+                // Reveal correct answer upon timeout
                 optionStyling =
                   'border-emerald-500/70 border-b-emerald-800 bg-emerald-500/15 text-emerald-200 cursor-default';
                 badgeStyling = 'border-emerald-500/50 bg-emerald-500/25 text-emerald-300';
@@ -560,8 +608,8 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
                   <span
                     className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-mono text-xs font-extrabold transition-colors ${badgeStyling}`}
                   >
-                    {isAnswered && isSelected ? (
-                      isCorrectOption ? (
+                    {isAnswered && isSelected && (awardedScore !== null || !initialSession) ? (
+                      isCorrectSelection ? (
                         <Check className="w-4 h-4 stroke-[3]" />
                       ) : (
                         <X className="w-4 h-4 stroke-[3]" />
@@ -576,15 +624,15 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
                 </div>
 
                 {/* State Tag Feedback */}
-                {isAnswered && isSelected && (
+                {isAnswered && isSelected && awardedScore !== null && (
                   <span
                     className={`shrink-0 rounded-md px-2 py-0.5 font-mono tabular-nums text-[11px] font-bold ${
-                      isCorrectOption
+                      isCorrectSelection
                         ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
                         : 'bg-rose-500/25 text-rose-300 border border-rose-500/40'
                     }`}
                   >
-                    {isCorrectOption ? `+${awardedScore}đ` : '+0đ'}
+                    {isCorrectSelection ? `+${awardedScore}đ` : '+0đ'}
                   </span>
                 )}
 
@@ -598,15 +646,15 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
           })}
         </div>
 
-        {/* Question Explanation Card (Shown on answer or timeout) */}
-        {hasEnded && currentQuestion.explanation && (
+        {/* Question Explanation Card (Shown on answer or timeout when explanation is present) */}
+        {hasEnded && Boolean(activeExplanation) && (
           <div className="rounded-xl border border-primary/35 bg-primary/10 p-3.5 text-xs text-primary-200 animate-fadeIn space-y-1">
             <div className="flex items-center gap-1.5 font-bold text-primary-300">
               <Lightbulb className="w-3.5 h-3.5 shrink-0 text-amber-400" />
               <span>Giải thích đáp án:</span>
             </div>
             <p className="text-foreground/90 leading-relaxed pl-5">
-              {currentQuestion.explanation}
+              {activeExplanation}
             </p>
           </div>
         )}

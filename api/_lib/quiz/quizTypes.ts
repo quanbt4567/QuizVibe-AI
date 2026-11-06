@@ -53,6 +53,8 @@ export interface QuizAnswerResponse {
   pointsEarned: number;
   totalScore: number;
   isComplete: boolean;
+  correctIndex?: number;
+  explanation?: string | null;
   nextQuestion: PublicQuestionPlayDto | null;
   result?: {
     totalScore: number;

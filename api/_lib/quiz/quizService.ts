@@ -229,6 +229,8 @@ export class QuizService {
         pointsEarned,
         totalScore: newTotalScore,
         isComplete: true,
+        correctIndex: targetQ.correct_index,
+        explanation: targetQ.explanation ?? null,
         nextQuestion: null,
         result: {
           totalScore: newTotalScore,
@@ -244,6 +246,8 @@ export class QuizService {
       pointsEarned,
       totalScore: newTotalScore,
       isComplete: false,
+      correctIndex: targetQ.correct_index,
+      explanation: targetQ.explanation ?? null,
       nextQuestion: nextQ
         ? {
             questionIndex: nextIndex,

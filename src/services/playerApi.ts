@@ -25,6 +25,8 @@ export interface QuizAnswerResult {
   pointsEarned: number;
   totalScore: number;
   isComplete: boolean;
+  correctIndex?: number;
+  explanation?: string | null;
   nextQuestion: PublicQuestionPlay | null;
   result?: {
     totalScore: number;
