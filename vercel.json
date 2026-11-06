@@ -15,6 +15,33 @@
       ]
     },
     {
+      "source": "/api/health",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/api",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/api/markdown",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        }
+      ]
+    },
+    {
       "source": "/llms.txt",
       "headers": [
         {
@@ -43,7 +70,7 @@
           "value": ".*text/markdown.*"
         }
       ],
-      "destination": "/api/markdown"
+      "destination": "/llms.txt"
     },
     {
       "source": "/quiz/:slug",
@@ -54,7 +81,19 @@
           "value": ".*text/markdown.*"
         }
       ],
-      "destination": "/api/markdown?slug=:slug"
+      "destination": "/llms.txt"
+    },
+    {
+      "source": "/api/markdown",
+      "destination": "/llms.txt"
+    },
+    {
+      "source": "/api/health",
+      "destination": "/api/health.json"
+    },
+    {
+      "source": "/api",
+      "destination": "/api/index.json"
     },
     {
       "source": "/quiz/:slug",

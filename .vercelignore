@@ -1,2 +1,7 @@
-# Exclude API test files from Vercel Serverless Function discovery
+# Exclude API test files and static helper files from Vercel Serverless Function discovery
 api/**/*.test.ts
+api/*.test.ts
+api/health.ts
+api/index.ts
+api/markdown.ts
+design-references/

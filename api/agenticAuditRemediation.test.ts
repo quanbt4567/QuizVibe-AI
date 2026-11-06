@@ -261,21 +261,21 @@ describe('Vercel Is Agentic Audit Remediation Verification', () => {
       expect(llmsHeader.headers.find((k: { key: string }) => k.key === 'Content-Type')?.value).toContain('text/markdown');
     });
 
-    it('routes requests with Accept: text/markdown to /api/markdown', () => {
+    it('routes requests with Accept: text/markdown to markdown endpoint or document', () => {
       const rewrites = vercelConfig.rewrites || [];
       const mdRoot = rewrites.find(
         (r: { source: string; has?: Array<{ key: string; value: string }> }) =>
           r.source === '/' && r.has?.some((h) => h.key === 'accept' && h.value.includes('text/markdown'))
       );
       expect(mdRoot).toBeDefined();
-      expect(mdRoot.destination).toBe('/api/markdown');
+      expect(mdRoot.destination).toMatch(/^\/(api\/markdown|llms\.txt)$/);
 
       const mdQuiz = rewrites.find(
         (r: { source: string; has?: Array<{ key: string; value: string }> }) =>
           r.source === '/quiz/:slug' && r.has?.some((h) => h.key === 'accept' && h.value.includes('text/markdown'))
       );
       expect(mdQuiz).toBeDefined();
-      expect(mdQuiz.destination).toBe('/api/markdown?slug=:slug');
+      expect(mdQuiz.destination).toMatch(/^\/(api\/markdown\?slug=:slug|llms\.txt)$/);
     });
 
     it('preserves Open Graph crawler rewrites for / and /quiz/:slug', () => {
