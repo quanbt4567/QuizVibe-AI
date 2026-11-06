@@ -628,6 +628,68 @@ describe('Phase 4: Player Sessions & Server-Side Scoring Engine', () => {
       expect(lead!.voucher_code).toBeNull();
       expect(JSON.stringify(body)).not.toContain('VIBE-REWARD');
     });
+
+    it('recovers seamlessly from database leads_masked_phone_check (23514) via fallback mask', async () => {
+      const token = await completeFullQuiz();
+
+      // Trigger 23514 only on initial insert if masked_phone contains 3 digits before asterisks
+      let firstAttempt = true;
+      fake.failure = (req) => {
+        if (req.table === 'leads' && req.method === 'POST') {
+          if (firstAttempt) {
+            firstAttempt = false;
+            return 'masked_phone_check';
+          }
+        }
+        return null;
+      };
+
+      const http = mockHttp({
+        method: 'POST',
+        body: {
+          sessionToken: token,
+          fullName: 'Võ Minh Quân',
+          phoneNumber: '0981234567',
+        },
+      });
+      await leadHandler(http.req, http.res);
+
+      expect(http.res.status$()).toBe(201);
+      const body = http.res.body$();
+      expect(body.ok).toBe(true);
+      expect(body.lead.fullName).toBe('Võ Minh Quân');
+
+      // Verify the persisted lead used the fallback mask (09***4567)
+      const lead = fake.tables.leads.find((l) => l.full_name === 'Võ Minh Quân');
+      expect(lead).toBeDefined();
+      expect(lead!.masked_phone).toBe('09***4567');
+      fake.failure = null;
+    });
+
+    it('translates database unique constraint race (23505) to 409 DUPLICATE_LEAD', async () => {
+      const token = await completeFullQuiz();
+
+      fake.failure = (req) => {
+        if (req.table === 'leads' && req.method === 'POST') {
+          return 'duplicate_session_race';
+        }
+        return null;
+      };
+
+      const http = mockHttp({
+        method: 'POST',
+        body: {
+          sessionToken: token,
+          fullName: 'Trần Văn Song Song',
+          phoneNumber: '0971234567',
+        },
+      });
+      await leadHandler(http.req, http.res);
+
+      expect(http.res.status$()).toBe(409);
+      expect(http.res.body$().code).toBe('DUPLICATE_LEAD');
+      fake.failure = null;
+    });
   });
 
   describe('5. Public Leaderboard (GET /api/quiz/leaderboard)', () => {

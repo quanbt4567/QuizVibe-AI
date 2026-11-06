@@ -10,7 +10,7 @@ import { campaignValidationCache } from '../quiz/campaignCache.js';
  */
 
 type Row = Record<string, any>;
-export type FailureMode = 'http500' | 'down' | 'hang';
+export type FailureMode = 'http500' | 'down' | 'hang' | 'masked_phone_check' | 'duplicate_session_race';
 
 export interface RecordedRequest {
   method: string;
@@ -112,6 +112,18 @@ export class FakePostgrest {
     if (mode === 'down') throw new TypeError('fetch failed (simulated outage)');
     if (mode === 'hang') return new Promise<Response>(() => {});
     if (mode === 'http500') return this.json(500, { message: 'simulated failure', code: 'XX000' });
+    if (mode === 'masked_phone_check') {
+      return this.json(400, {
+        code: '23514',
+        message: 'new row for relation "leads" violates check constraint "leads_masked_phone_check"',
+      });
+    }
+    if (mode === 'duplicate_session_race') {
+      return this.json(409, {
+        code: '23505',
+        message: 'duplicate key value violates unique constraint "leads_quiz_session_id_key"',
+      });
+    }
 
     if (isRpc) return this.rpc(table, body);
 

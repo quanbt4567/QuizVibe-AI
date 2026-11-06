@@ -1,5 +1,6 @@
 import { ensureServerEnvLoaded } from '../_lib/auth/index.js';
 import { QuizService, QuizError } from '../_lib/quiz/index.js';
+import { DatabaseOperationError } from '../_lib/db/repository.js';
 
 ensureServerEnvLoaded();
 
@@ -57,6 +58,14 @@ export default async function handler(req: any, res: any) {
         error: err.message,
       });
     }
+    if (err instanceof DatabaseOperationError && err.code === 'DUPLICATE_LEAD') {
+      return res.status(409).json({
+        ok: false,
+        code: 'DUPLICATE_LEAD',
+        error: err.message,
+      });
+    }
+    console.error('[api/quiz/lead] Unexpected lead submission failure:', err);
     return res.status(503).json({
       ok: false,
       code: 'SERVICE_UNAVAILABLE',

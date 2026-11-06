@@ -416,11 +416,31 @@ export class QuizVibeDatabaseRepository {
       submitted_at: input.submitted_at ?? new Date().toISOString(),
     };
 
-    const { data, error } = await this.db
+    let { data, error } = await this.db
       .from('leads')
       .insert(leadInsert)
       .select('*')
       .single();
+
+    // Defensive fallback: If database has legacy leads_masked_phone_check requiring 9-character format (2-digit prefix)
+    if (error && (error.code === '23514' || error.message?.includes('leads_masked_phone_check'))) {
+      const fallbackMask = `${cleanPhone.slice(0, 2)}***${cleanPhone.slice(-4)}`;
+      const retryResult = await this.db
+        .from('leads')
+        .insert({ ...leadInsert, masked_phone: fallbackMask })
+        .select('*')
+        .single();
+      data = retryResult.data;
+      error = retryResult.error;
+    }
+
+    if (error?.code === '23505') {
+      throw new DatabaseOperationError(
+        'DUPLICATE_LEAD',
+        'Thông tin khách hàng đã được ghi nhận trước đó cho lượt chơi này.',
+        error
+      );
+    }
 
     if (error || !data) {
       throw new DatabaseOperationError(
