@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Ticket } from 'lucide-react';
 import { VoucherConfig as VoucherConfigType } from '../../types';
 import { Card, Input, Badge } from '../ui';
 
@@ -119,6 +119,56 @@ export const VoucherConfig: React.FC<VoucherConfigProps> = ({ voucher, onChange,
             onChange={(e) => onChange('terms', e.target.value)}
             placeholder="VD: Áp dụng 01 lần cho mỗi khách hàng hợp lệ"
           />
+        </div>
+      </div>
+
+      {/* Live Voucher Preview Card */}
+      <div className="mt-5 pt-5 border-t border-border-subtle">
+        <div className="flex items-center gap-2 mb-3">
+          <Ticket className="w-3.5 h-3.5 text-amber-400" />
+          <span className="text-xs font-semibold text-content-secondary uppercase tracking-wider">
+            Xem trước Voucher (Giao diện người chơi)
+          </span>
+        </div>
+
+        <div className="relative overflow-hidden rounded-xl border border-dashed border-amber-500/40 bg-recessed p-4 sm:p-5 max-w-md">
+          {/* Ticket Cutout Notches */}
+          <div
+            className="pointer-events-none absolute -left-2.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full border-r border-amber-500/40 bg-card"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute -right-2.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full border-l border-amber-500/40 bg-card"
+            aria-hidden="true"
+          />
+
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 space-y-1">
+              <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">
+                Mã ưu đãi mở khóa
+              </span>
+              <h4 className="text-sm sm:text-base font-bold text-foreground truncate">
+                {voucher.discount.trim() || 'Ưu đãi đặc biệt'}
+              </h4>
+              <p className="text-xs text-content-secondary line-clamp-2">
+                {voucher.description.trim() || 'Áp dụng cho khách hàng tham gia minigame'}
+              </p>
+            </div>
+
+            <div className="shrink-0 rounded-lg border border-amber-500/30 bg-card px-2.5 py-1.5 text-center">
+              <span className="block text-[9px] font-semibold text-content-muted">MÃ</span>
+              <span className="font-mono tabular-nums text-xs font-black tracking-wider text-amber-400">
+                {voucher.code.trim().toUpperCase() || 'VIBE20'}
+              </span>
+            </div>
+          </div>
+
+          {(voucher.expiryDate || voucher.terms) && (
+            <div className="mt-3 pt-2.5 border-t border-border-subtle flex flex-wrap items-center justify-between gap-2 text-[11px] text-content-muted font-mono tabular-nums">
+              {voucher.expiryDate && <span>HSD: {voucher.expiryDate}</span>}
+              {voucher.terms && <span>* {voucher.terms}</span>}
+            </div>
+          )}
         </div>
       </div>
     </Card>

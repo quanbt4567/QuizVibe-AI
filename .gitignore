@@ -48,3 +48,7 @@ _bmad/config.user.toml
 # OS files
 .DS_Store
 Thumbs.db
+
+# Design references & external research
+design-references/
+

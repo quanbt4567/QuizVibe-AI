@@ -1,0 +1,13 @@
+# QuizVibe AI - Crawler and Bot Access Policy
+User-agent: *
+Allow: /
+Allow: /quiz/
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://quiz-vibe-ai.vercel.app/sitemap.xml
+

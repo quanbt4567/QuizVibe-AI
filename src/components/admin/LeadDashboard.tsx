@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Users,
-  Search,
   Trash2,
   Filter,
   RotateCcw,
@@ -22,13 +21,15 @@ import {
   Button,
   Badge,
   Card,
-  Input,
   Table,
   TableHeader,
   TableBody,
   TableRow,
   TableHead,
   TableCell,
+  StatCard,
+  EmptyState,
+  SearchInput,
 } from '../ui';
 
 export interface LeadDashboardProps {
@@ -373,79 +374,41 @@ export const LeadDashboard: React.FC<LeadDashboardProps> = ({ currentCampaign })
         </div>
       )}
 
-      {/* Steep-Inspired Editorial KPI Strip (Primary Business Outcomes vs Secondary Gameplay Telemetry) */}
-      <Card className="overflow-hidden">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 divide-y sm:divide-y-0 lg:divide-x divide-border-subtle">
-          {/* Primary Metric 1: Total Leads Captured (Hero KPI) */}
-          <div className="sm:col-span-2 lg:col-span-5 p-5 sm:p-6 bg-primary/[0.05] border-b lg:border-b-0 border-border-subtle flex flex-col justify-between">
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-semibold text-foreground">
-                Tổng số Lead thu thập
-              </span>
-              <Badge variant="default" shape="compact" tabularNums className="font-mono text-[11px]">
-                Chỉ số chính
-              </Badge>
-            </div>
-            <div className="mt-2.5 flex items-baseline gap-2.5">
-              <p className="font-mono text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground tabular-nums">
-                {stats.total.toLocaleString('vi-VN')}
-              </p>
-              <span className="text-xs font-medium text-content-secondary">
-                khách hàng đã xác thực SĐT
-              </span>
-            </div>
-            <span className="mt-1.5 block text-xs text-content-muted tabular-nums">
-              {hasActiveFilters
-                ? `Đang lọc hiển thị ${filteredLeads.length.toLocaleString('vi-VN')} / ${stats.total.toLocaleString('vi-VN')} bản ghi`
-                : 'Dữ liệu đồng bộ trực tiếp từ lượt chơi hợp lệ'}
-            </span>
-          </div>
-
-          {/* Primary Metric 2: Vouchers Claimed & Conversion Rate */}
-          <div className="sm:col-span-1 lg:col-span-3 p-4 sm:p-5 flex flex-col justify-between">
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-semibold text-foreground">
-                Voucher đã phát
-              </span>
-              <span className="font-mono text-[11px] font-semibold text-emerald-400 tabular-nums">
-                {stats.total > 0 ? Math.round((stats.vouchersClaimed / stats.total) * 100) : 0}% nhận mã
-              </span>
-            </div>
-            <p className="mt-2 font-mono text-2xl sm:text-3xl font-bold tracking-tight text-emerald-400 tabular-nums">
-              {stats.vouchersClaimed.toLocaleString('vi-VN')}
-            </p>
-            <span className="mt-1 block text-xs text-content-muted">
-              Đã mở khóa mã ưu đãi
-            </span>
-          </div>
-
-          {/* Secondary Telemetry 1: Average Score */}
-          <div className="sm:col-span-1 lg:col-span-2 p-4 sm:p-5 border-t sm:border-t-0 sm:border-l border-border-subtle flex flex-col justify-between">
-            <span className="text-xs font-medium text-content-secondary">
-              Điểm trung bình
-            </span>
-            <p className="mt-2 font-mono text-xl sm:text-2xl font-semibold tracking-tight text-foreground tabular-nums">
-              {stats.averageScore.toLocaleString('vi-VN')}
-            </p>
-            <span className="mt-1 block text-[11px] text-content-muted tabular-nums">
-              Thang 2.000 điểm
-            </span>
-          </div>
-
-          {/* Secondary Telemetry 2: Highest Score */}
-          <div className="sm:col-span-2 lg:col-span-2 p-4 sm:p-5 border-t lg:border-t-0 border-border-subtle flex flex-col justify-between">
-            <span className="text-xs font-medium text-content-secondary">
-              Kỷ lục cao nhất
-            </span>
-            <p className="mt-2 font-mono text-xl sm:text-2xl font-semibold tracking-tight text-amber-300 tabular-nums">
-              {stats.highestScore.toLocaleString('vi-VN')}
-            </p>
-            <span className="mt-1 block text-[11px] text-content-muted">
-              Thành tích dẫn đầu
-            </span>
-          </div>
-        </div>
-      </Card>
+      {/* Blocks.so-Inspired High-Density KPI Metric Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <StatCard
+          title="Tổng số Lead thu thập"
+          value={stats.total.toLocaleString('vi-VN')}
+          icon={<Users className="w-4 h-4 text-primary" />}
+          subtitle={
+            hasActiveFilters
+              ? `Đang lọc: ${filteredLeads.length.toLocaleString('vi-VN')} / ${stats.total.toLocaleString('vi-VN')} bản ghi`
+              : 'khách hàng đã xác thực SĐT'
+          }
+        />
+        <StatCard
+          title="Voucher đã phát"
+          value={stats.vouchersClaimed.toLocaleString('vi-VN')}
+          icon={<Ticket className="w-4 h-4 text-emerald-400" />}
+          trend={{
+            value: `${stats.total > 0 ? Math.round((stats.vouchersClaimed / stats.total) * 100) : 0}% nhận mã`,
+            direction: 'up',
+            label: 'Đã mở khóa ưu đãi',
+          }}
+        />
+        <StatCard
+          title="Điểm trung bình"
+          value={stats.averageScore.toLocaleString('vi-VN')}
+          icon={<Award className="w-4 h-4 text-primary-400" />}
+          subtitle="Thang 2.000 điểm chuẩn"
+        />
+        <StatCard
+          title="Kỷ lục cao nhất"
+          value={stats.highestScore.toLocaleString('vi-VN')}
+          icon={<Award className="w-4 h-4 text-amber-300" />}
+          subtitle="Thành tích dẫn đầu"
+        />
+      </div>
 
       {/* Stripe / Linear Data Ledger Card */}
       <Card className="overflow-hidden">
@@ -498,26 +461,14 @@ export const LeadDashboard: React.FC<LeadDashboardProps> = ({ currentCampaign })
         {/* Filter, Search & Sort Control Bar */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 p-4 sm:px-5 bg-canvas/40 border-b border-border-subtle">
           {/* Search Input */}
-          <div className="sm:col-span-2 lg:col-span-5 relative">
-            <Search className="w-3.5 h-3.5 text-content-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <Input
-              type="text"
+          <div className="sm:col-span-2 lg:col-span-5">
+            <SearchInput
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(val) => setSearchQuery(val)}
               placeholder="Tìm theo họ tên hoặc số điện thoại..."
-              className="pl-8 pr-8 h-9 text-xs sm:text-sm"
+              shortcutBadge="/"
               aria-label="Tìm kiếm lead theo tên hoặc số điện thoại"
             />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-content-muted hover:text-foreground p-0.5 cursor-pointer"
-                aria-label="Xóa nội dung tìm kiếm"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
           </div>
 
           {/* Campaign Filter Dropdown */}
@@ -586,43 +537,27 @@ export const LeadDashboard: React.FC<LeadDashboardProps> = ({ currentCampaign })
 
         {/* 1. Global Empty State */}
         {leads.length === 0 ? (
-          <div className="p-10 sm:p-14 text-center space-y-3">
-            <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl border border-border-subtle bg-recessed text-content-secondary">
-              <Users className="h-5 w-5" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-sm sm:text-base font-semibold text-foreground">
-                Chưa có dữ liệu lead khách hàng
-              </h3>
-              <p className="text-xs text-content-secondary max-w-sm mx-auto leading-relaxed">
-                Khi khách hàng hoàn thành 5 câu hỏi minigame và đăng ký nhận mã ưu đãi, danh sách liên hệ và điểm số sẽ hiển thị tại đây.
-              </p>
-            </div>
+          <div className="p-6 sm:p-10">
+            <EmptyState
+              title="Chưa có dữ liệu lead khách hàng"
+              description="Khi khách hàng hoàn thành 5 câu hỏi minigame và đăng ký nhận mã ưu đãi, danh sách liên hệ và điểm số sẽ hiển thị tại đây."
+              icon={<Users className="w-6 h-6 text-content-muted" />}
+            />
           </div>
         ) : filteredLeads.length === 0 ? (
           /* 2. Filter No Results State */
-          <div className="p-10 text-center space-y-3">
-            <Filter className="mx-auto h-6 w-6 text-content-muted" />
-            <div className="space-y-1">
-              <h3 className="text-sm font-semibold text-foreground">
-                Không tìm thấy lead phù hợp
-              </h3>
-              <p className="text-xs text-content-secondary max-w-xs mx-auto">
-                Không có khách hàng nào khớp với điều kiện tìm kiếm và bộ lọc hiện tại.
-              </p>
-            </div>
-            <div className="pt-1">
-              <Button
-                type="button"
-                variant="secondary"
-                size="compact"
-                onClick={handleResetFilters}
-                className="gap-1.5"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Xóa bộ lọc</span>
-              </Button>
-            </div>
+          <div className="p-6 sm:p-10">
+            <EmptyState
+              title="Không tìm thấy lead phù hợp"
+              description="Không có khách hàng nào khớp với điều kiện tìm kiếm và bộ lọc hiện tại."
+              icon={<Filter className="w-6 h-6 text-content-muted" />}
+              action={{
+                label: 'Xóa bộ lọc',
+                onClick: handleResetFilters,
+                icon: <RotateCcw className="w-3.5 h-3.5" />,
+                variant: 'secondary',
+              }}
+            />
           </div>
         ) : (
           /* 3. Populated State: Desktop Ledger Table (>= lg) & Responsive Cards (< lg) */

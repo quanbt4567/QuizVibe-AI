@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, ShieldCheck, AlertCircle, ArrowLeft, Zap } from 'lucide-react';
+import { Lock, ShieldCheck, AlertCircle, ArrowLeft, Layers } from 'lucide-react';
 import { loginAdmin } from '../../services/adminAuthService';
 import { Button, Card, Input, Badge } from '../ui';
 
@@ -53,7 +53,7 @@ export const AdminLoginScreen: React.FC<AdminLoginScreenProps> = ({
       <div className="mx-auto w-full max-w-md flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-primary/30 bg-primary/15 text-primary shadow-key">
-            <Zap className="h-4 w-4" />
+            <Layers className="h-4 w-4" />
           </div>
           <span className="text-sm sm:text-base font-bold tracking-tight text-foreground">
             QuizVibe <span className="text-primary">AI</span>

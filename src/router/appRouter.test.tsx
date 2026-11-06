@@ -255,6 +255,47 @@ describe('Phase 2: URL Routing, Layout Separation & Admin/Player Access Boundari
       expect(window.localStorage.getItem('admin_password')).toBeNull();
       expect(window.sessionStorage.length).toBe(0);
     });
+
+    it('cleanly replaces pre-rendered static HTML content inside root on mount without duplicates', async () => {
+      global.fetch = vi.fn().mockImplementation(async (url: string) => {
+        if (url.includes('/api/admin/session')) {
+          return {
+            ok: true,
+            status: 200,
+            json: async () => ({ ok: true, authenticated: false }),
+          } as unknown as Response;
+        }
+        return { ok: true, status: 200, json: async () => ({ ok: true }) } as unknown as Response;
+      });
+
+      act(() => {
+        root.unmount();
+      });
+      container.innerHTML = `
+        <div id="static-prerender-header">
+          <h1>QuizVibe AI Static Pre-rendered Heading</h1>
+          <p>Initial SEO content before JS hydration</p>
+        </div>
+      `;
+
+      expect(container.querySelector('#static-prerender-header')).not.toBeNull();
+
+      const newRoot = createRoot(container);
+      window.history.pushState({}, '', '/admin/login');
+
+      await act(async () => {
+        newRoot.render(<App />);
+      });
+
+      // The static pre-rendered element must be completely replaced
+      expect(container.querySelector('#static-prerender-header')).toBeNull();
+      // Replaced cleanly with the interactive React component tree
+      expect(container.querySelector('[data-testid="admin-login-screen"]')).not.toBeNull();
+
+      act(() => {
+        newRoot.unmount();
+      });
+    });
   });
 });
 

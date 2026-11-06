@@ -5,4 +5,5 @@ export * from './AdminDashboard';
 export * from './LeadDashboard';
 export * from './CampaignManager';
 export * from './persistence';
+export * from './layout';
 

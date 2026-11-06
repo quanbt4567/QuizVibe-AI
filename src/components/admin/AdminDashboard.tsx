@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Sparkles,
   Edit3,
@@ -33,6 +33,7 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
+  StatCard,
 } from '../ui';
 
 export interface AdminDashboardProps {
@@ -62,6 +63,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     return 'manual';
   });
   const presets = StorageService.getPresets();
+  const leadCount = useMemo(() => {
+    const res = StorageService.getLeads();
+    return res.success && Array.isArray(res.data) ? res.data.length : 0;
+  }, []);
 
   useEffect(() => {
     if (activeSection === 'leads') {
@@ -670,6 +675,28 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </Button>
           )}
         </div>
+      </div>
+
+      {/* Overview Quick Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <StatCard
+          title="Chiến dịch hoạt động"
+          value={campaign?.title || 'Chưa khởi tạo'}
+          subtitle={campaign?.industry || 'Chưa chọn ngành hàng'}
+          icon={<Layers className="w-4 h-4 text-primary" />}
+        />
+        <StatCard
+          title="Mã Voucher ưu đãi"
+          value={campaign?.voucher?.code || 'Chưa cấu hình'}
+          subtitle={campaign?.voucher?.discount || 'Chưa có mô tả ưu đãi'}
+          icon={<Ticket className="w-4 h-4 text-amber-400" />}
+        />
+        <StatCard
+          title="Khách hàng tiềm năng (Leads)"
+          value={leadCount.toString()}
+          subtitle="Đã hoàn thành minigame & xác nhận SĐT"
+          icon={<Users className="w-4 h-4 text-emerald-400" />}
+        />
       </div>
 
       {/* Editorial Workspace Header & Linear Segmented Navigation */}

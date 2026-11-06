@@ -20,13 +20,127 @@
     <meta name="twitter:title" content="QuizVibe AI — Minigame Quiz Thu Lead Fanpage" />
     <meta name="twitter:description" content="Thử thách kiến thức trúng voucher cực đỉnh! Nền tảng Gamification Quiz tương tác số 1 cho thương hiệu." />
     <meta name="twitter:image" content="https://quiz-vibe-ai.vercel.app/og-image.png" />
+    <link rel="canonical" href="https://quiz-vibe-ai.vercel.app/" />
+    <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Documentation" />
+    <!-- Structured Data (JSON-LD) for SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "QuizVibe AI",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "description": "Nền tảng Gamification Minigame Quiz tương tác thu lead khách hàng tiềm năng và phân phối voucher ưu đãi cho thương hiệu trên mạng xã hội.",
+      "url": "https://quiz-vibe-ai.vercel.app",
+      "inLanguage": ["vi", "en"],
+      "featureList": [
+        "AI-powered 5-question quiz generation with Google Gemini",
+        "Real-time 30-second speed scoring engine",
+        "Lead capture with Vietnamese phone number validation",
+        "Automated voucher reward distribution",
+        "Live Top 10 Leaderboard",
+        "Facebook SDK Share Dialog with dynamic Open Graph preview"
+      ]
+    }
+    </script>
     <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
   <body class="bg-canvas text-foreground antialiased font-sans selection:bg-indigo-500 selection:text-white">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Semantic Machine-Readable Pre-Render Content (Replaced when React mounts) -->
+      <header style="padding: 1.5rem 1rem; border-bottom: 1px solid #1E2433; max-width: 1024px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h1 style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF; margin: 0;">
+            QuizVibe <span style="color: #6366F1;">AI</span>
+          </h1>
+          <p style="font-size: 0.8125rem; color: #94A3B8; margin: 0.25rem 0 0 0;">
+            Nền tảng Minigame Quiz Tương Tác Thu Lead &amp; Phân Phối Voucher với AI
+          </p>
+        </div>
+        <nav>
+          <a href="/quiz/active" style="color: #6366F1; font-weight: 600; text-decoration: none; margin-right: 1.25rem; font-size: 0.875rem;">
+            Chơi Thử Thách
+          </a>
+          <a href="/admin/login" style="color: #94A3B8; text-decoration: none; font-size: 0.875rem;">
+            Quản Trị Viên
+          </a>
+        </nav>
+      </header>
+
+      <main style="max-width: 1024px; margin: 0 auto; padding: 2rem 1rem;">
+        <section style="margin-bottom: 2.5rem;">
+          <h2 style="font-size: 1.75rem; font-weight: 800; color: #FFFFFF; line-height: 1.35; margin-bottom: 0.75rem;">
+            Biến Lượt Tương Tác Fanpage Thành Khách Hàng Tiềm Năng Bằng Minigame Trắc Nghiệm Thông Minh
+          </h2>
+          <p style="font-size: 1rem; color: #94A3B8; line-height: 1.6; max-width: 780px;">
+            QuizVibe AI là giải pháp gamification marketing dành cho doanh nghiệp, chủ cửa hàng, và các thương hiệu bán lẻ. Nền tảng cho phép tạo minigame trắc nghiệm 5 câu hỏi nhanh chóng bằng AI (Google Gemini 3.8 Flash) hoặc biên tập thủ công, kích thích người chơi thử thách kiến thức trong 30 giây để nhận mã voucher ưu đãi và đua Top 10 Bảng xếp hạng.
+          </p>
+        </section>
+
+        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem;">
+          <article style="background: #0B0E17; border: 1px solid #1E2433; border-radius: 0.75rem; padding: 1.25rem;">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.5rem;">
+              Tạo Câu Hỏi Bằng AI &amp; Kiểm Duyệt
+            </h3>
+            <p style="font-size: 0.8125rem; color: #94A3B8; line-height: 1.5;">
+              Tự động biên soạn 5 câu hỏi trắc nghiệm chuẩn ngành hàng (Mỹ phẩm, Thời trang, F&amp;B, Công nghệ...) với Cổng Kiểm duyệt (AI Review Gate) đảm bảo độ chính xác trước khi xuất bản.
+            </p>
+          </article>
+
+          <article style="background: #0B0E17; border: 1px solid #1E2433; border-radius: 0.75rem; padding: 1.25rem;">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.5rem;">
+              Trải Nghiệm Chơi Game Tactile 30s
+            </h3>
+            <p style="font-size: 0.8125rem; color: #94A3B8; line-height: 1.5;">
+              Giao diện thẻ câu hỏi trực quan với đồng hồ đếm ngược 30 giây, cơ chế tính điểm tốc độ (Speed Scoring), và phản hồi đáp án tức thì kèm giải thích chi tiết.
+            </p>
+          </article>
+
+          <article style="background: #0B0E17; border: 1px solid #1E2433; border-radius: 0.75rem; padding: 1.25rem;">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.5rem;">
+              Thu Lead &amp; Đổi Mã Voucher
+            </h3>
+            <p style="font-size: 0.8125rem; color: #94A3B8; line-height: 1.5;">
+              Người chơi hoàn tất thử thách và xác thực số điện thoại di động Việt Nam để mở khóa mã voucher giảm giá độc quyền, sẵn sàng sao chép để mua sắm trên Fanpage.
+            </p>
+          </article>
+
+          <article style="background: #0B0E17; border: 1px solid #1E2433; border-radius: 0.75rem; padding: 1.25rem;">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.5rem;">
+              Bảng Xếp Hạng Top 10 Minh Bạch
+            </h3>
+            <p style="font-size: 0.8125rem; color: #94A3B8; line-height: 1.5;">
+              Cơ chế phân định thứ hạng công bằng theo Điểm số cao nhất, Thời gian hoàn thành nhanh nhất, và Thời điểm gửi sớm nhất. Số điện thoại người chơi được mã hóa bảo mật (0912***678).
+            </p>
+          </article>
+        </section>
+
+        <section style="background: #121723; border: 1px solid #1E2433; border-radius: 0.75rem; padding: 1.75rem; text-align: center;">
+          <h3 style="font-size: 1.125rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.5rem;">
+            Sẵn Sàng Tham Gia Thử Thách?
+          </h3>
+          <p style="font-size: 0.8125rem; color: #94A3B8; margin-bottom: 1.25rem;">
+            Tham gia ngay minigame đang diễn ra hoặc đăng nhập vào Admin Studio để quản lý chiến dịch của bạn.
+          </p>
+          <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="/quiz/active" style="display: inline-block; background: #6366F1; color: #FFFFFF; font-weight: 700; padding: 0.625rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-size: 0.875rem;">
+              Chơi Minigame Ngay
+            </a>
+            <a href="/admin/login" style="display: inline-block; background: #1A2130; color: #FFFFFF; font-weight: 600; padding: 0.625rem 1.5rem; border: 1px solid #1E2433; border-radius: 0.5rem; text-decoration: none; font-size: 0.875rem;">
+              Đăng Nhập Quản Trị
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <footer style="border-top: 1px solid #1E2433; padding: 1.5rem 1rem; text-align: center; color: #8494AA; font-size: 0.75rem;">
+        <p>QuizVibe AI &copy; 2026 &mdash; Nền tảng Gamification Quiz Tương Tác Số 1 Cho Thương Hiệu.</p>
+      </footer>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

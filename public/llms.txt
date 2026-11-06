@@ -1,0 +1,22 @@
+# QuizVibe AI
+
+> Interactive Gamified Lead Capture Minigames with AI and Voucher Rewards.
+
+QuizVibe AI is an enterprise-grade gamification marketing platform for businesses, e-commerce stores, and social media fanpages. It enables brands to deploy interactive 5-question quizzes that engage audiences in a 30-second reflex challenge, collect verified leads (Vietnamese mobile numbers), distribute discount vouchers, and showcase top players on a live Top 10 leaderboard.
+
+## Core Capabilities
+
+- **AI Question Generator**: Generates 5 curated multiple-choice questions tailored to specific industries (Cosmetics, Fashion, Tech, F&B, Education, etc.) using Google Gemini with an editorial Review Gate before publication.
+- **Speed Scoring Gameplay**: Tactile Duolingo-style flashcards with a synchronized 30-second timer and speed scoring bonuses (+100 to +400 points per question).
+- **Lead Capture & Voucher Distribution**: Gated reward collection requiring player full name and valid 10-digit Vietnamese phone number, unlocking single-use promotional vouchers.
+- **Top 10 Live Leaderboard**: Deterministic ranking based on Score DESC, Time ASC, and Submission ASC, with phone masking (0912***678) for privacy.
+- **Social Sharing**: Native Facebook SDK Share Dialog with dynamic serverless Open Graph crawlers.
+
+## Public URLs
+
+- Homepage & Overview: https://quiz-vibe-ai.vercel.app/
+- Active Minigame: https://quiz-vibe-ai.vercel.app/quiz/active
+- Public API Discovery: https://quiz-vibe-ai.vercel.app/api
+- Health Status: https://quiz-vibe-ai.vercel.app/api/health
+- Full Documentation: https://quiz-vibe-ai.vercel.app/llms-full.txt
+

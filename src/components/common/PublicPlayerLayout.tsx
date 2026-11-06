@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap } from 'lucide-react';
+import { Layers } from 'lucide-react';
 import { Badge } from '../ui';
 
 export interface PublicPlayerLayoutProps {
@@ -25,7 +25,7 @@ export const PublicPlayerLayout: React.FC<PublicPlayerLayoutProps> = ({
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-2 px-4 sm:px-6">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-primary/30 bg-primary/15 text-primary shadow-key">
-              <Zap className="h-4 w-4" />
+              <Layers className="h-4 w-4" />
             </div>
 
             <div className="flex items-center gap-2 min-w-0">

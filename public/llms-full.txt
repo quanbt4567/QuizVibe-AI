@@ -1,0 +1,44 @@
+# QuizVibe AI — Full System Documentation for LLMs and AI Agents
+
+## Overview
+QuizVibe AI is an interactive gamification marketing platform designed for retailers, digital brands, and fanpage marketers. It turns social engagement into verified customer leads using 5-question trivia minigames combined with immediate voucher incentives.
+
+## Core Features & Workflow
+
+1. **Campaign Creation & AI Review Gate**:
+   - Merchants can generate a 5-question quiz using Google Gemini 3.8 Flash by entering an industry and topic.
+   - All questions pass through a human editorial review gate before being saved to the database as drafts.
+   - Merchants can also author questions manually with 4 multiple-choice options and 1 correct answer.
+
+2. **Player Experience (`/quiz/:slug`)**:
+   - Clean, dark-mode tactile flashcard interface (inspired by Duolingo #2).
+   - Each question has a strict 30-second countdown timer.
+   - Correct answers earn +100 to +400 points based on speed (calculated securely on the server).
+   - Immediate feedback with explanation drawer.
+
+3. **Lead Capture & Reward Voucher**:
+   - Upon completing 5 questions, players enter their full name and 10-digit Vietnamese mobile phone number.
+   - Verified submissions unlock an exclusive discount voucher with terms and single-use codes.
+   - Player records are stored in a secure ledger for merchant export (CSV).
+
+4. **Public Leaderboard**:
+   - Transparent Top 10 leaderboard with deterministic tie-breaking (Score DESC, Time ASC, Submission ASC).
+   - Player phone numbers are masked (e.g. 0912***678) to preserve privacy.
+
+5. **Social Sharing**:
+   - Built-in Facebook SDK Share Dialog with dynamic serverless Open Graph meta tags (`/api/og`).
+
+## Technical Stack & Constraints
+- **Frontend**: React 19, Vite 6, TypeScript, Tailwind CSS 3.4.17.
+- **Backend**: Vercel Serverless Functions (Node.js).
+- **Database**: Supabase (PostgreSQL) with Row-Level Security (RLS).
+- **Security**: Hash-only player session tokens (SHA-256), HttpOnly admin session cookies, server-side scoring verification.
+
+## Public Endpoints
+- `GET /`: Homepage with machine-readable semantic HTML and JSON-LD schema.
+- `GET /quiz/:slug`: Public quiz player screen for published campaigns.
+- `GET /api`: API catalog and discovery manifest.
+- `GET /api/health`: Health status.
+- `GET /api/public/campaign?slug=:slug`: Public campaign questions without correct answers.
+- `GET /api/quiz/leaderboard?slug=:slug`: Public top 10 leaderboard for a campaign.
+

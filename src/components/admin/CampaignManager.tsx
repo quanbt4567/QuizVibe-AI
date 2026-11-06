@@ -21,7 +21,7 @@ import {
   campaignAdminApi,
 } from '../../services/campaignAdminApi';
 import { copyToClipboard } from '../../services/clipboard';
-import { Badge, Button, Card } from '../ui';
+import { Badge, Button, Card, EmptyState } from '../ui';
 
 type CampaignApi = Pick<typeof campaignAdminApi, 'list' | 'transition'>;
 
@@ -217,21 +217,33 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
       )}
 
       {Array.isArray(campaigns) && campaigns.length === 0 && (
-        <Card className="p-8 text-center space-y-3">
-          <Layers className="mx-auto h-6 w-6 text-primary" />
-          <p className="text-sm font-semibold text-foreground">Chưa có chiến dịch nào</p>
-          <p className="text-xs text-content-secondary">
-            Tạo chiến dịch đầu tiên bằng AI hoặc thủ công. Chiến dịch mới luôn bắt đầu ở trạng thái bản nháp.
-          </p>
-          <Button type="button" onClick={() => onNavigate('/admin/campaigns/new')} className="gap-2">
-            <Plus className="h-4 w-4" />
-            <span>Tạo chiến dịch mới</span>
-          </Button>
+        <Card className="p-8">
+          <EmptyState
+            icon={<Layers className="h-6 w-6 text-primary" />}
+            title="Chưa có chiến dịch nào"
+            description="Tạo chiến dịch đầu tiên bằng AI hoặc thủ công. Chiến dịch mới luôn bắt đầu ở trạng thái bản nháp."
+            action={{
+              label: 'Tạo chiến dịch mới',
+              onClick: () => onNavigate('/admin/campaigns/new'),
+              icon: <Plus className="h-4 w-4" />,
+            }}
+          />
         </Card>
       )}
 
       {Array.isArray(campaigns) && campaigns.length > 0 && visible.length === 0 && (
-        <p className="py-8 text-center text-xs text-content-secondary">Không có chiến dịch nào ở trạng thái này.</p>
+        <Card className="p-8">
+          <EmptyState
+            icon={<Layers className="h-6 w-6 text-content-muted" />}
+            title="Không có chiến dịch nào ở trạng thái này."
+            description="Hãy thử chọn bộ lọc trạng thái khác để xem các chiến dịch của bạn."
+            action={{
+              label: 'Xem tất cả',
+              onClick: () => setFilter('all'),
+              variant: 'secondary',
+            }}
+          />
+        </Card>
       )}
 
       <ul className="space-y-3">
@@ -239,7 +251,10 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
           const busy = busyId === c.id;
           return (
             <li key={c.id}>
-              <Card data-testid={`campaign-row-${c.id}`} className="p-4 sm:p-5">
+              <Card
+                data-testid={`campaign-row-${c.id}`}
+                className="p-4 sm:p-5 transition-all duration-150 hover:border-border/80"
+              >
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                   <div className="min-w-0 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
@@ -262,9 +277,12 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
                     </div>
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-content-secondary">
-                      <span>{c.industry}</span>
+                      <span className="inline-flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-content-muted/60" />
+                        {c.industry}
+                      </span>
                       {c.voucherCode && (
-                        <span className="inline-flex items-center gap-1 font-mono tabular-nums text-emerald-300">
+                        <span className="inline-flex items-center gap-1 font-mono tabular-nums text-emerald-400 bg-emerald-950/40 border border-emerald-800/30 px-1.5 py-0.5 rounded text-[10px]">
                           <Ticket className="h-3 w-3" />
                           {c.voucherCode}
                         </span>
@@ -331,7 +349,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
                           href={`/quiz/${c.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex h-8 items-center gap-1.5 rounded-admin px-3 text-xs text-content-secondary hover:bg-interactive hover:text-foreground"
+                          className="inline-flex h-8 items-center gap-1.5 rounded-admin px-3 text-xs text-content-secondary hover:bg-interactive hover:text-foreground transition-colors"
                         >
                           <ExternalLink className="h-3.5 w-3.5" />
                           <span>Mở</span>
