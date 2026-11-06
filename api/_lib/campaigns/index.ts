@@ -1,4 +1,4 @@
-export * from './campaignDto';
-export * from './campaignValidation';
-export * from './campaignService';
+export * from './campaignDto.js';
+export * from './campaignValidation.js';
+export * from './campaignService.js';
 

@@ -1,11 +1,11 @@
-import { assertServerRuntime } from '../db/config';
+import { assertServerRuntime } from '../db/config.js';
 import type {
   CampaignQuestionRow,
   CampaignRow,
   CampaignStatus,
   CompleteCampaignRecord,
   VoucherRow,
-} from '../db/types';
+} from '../db/types.js';
 
 assertServerRuntime();
 

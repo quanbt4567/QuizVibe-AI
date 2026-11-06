@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
-import { FakePostgrest, FAKE_SUPABASE_HOST } from './_lib/testing/fakePostgrest';
-import { mockHttp, tokenFromSetCookie } from './_lib/testing/httpMock';
-import { ADMIN_SESSION_COOKIE_NAME } from './_lib/auth/adminAuth';
+import { FakePostgrest, FAKE_SUPABASE_HOST } from './_lib/testing/fakePostgrest.js';
+import { mockHttp, tokenFromSetCookie } from './_lib/testing/httpMock.js';
+import { ADMIN_SESSION_COOKIE_NAME } from './_lib/auth/adminAuth.js';
 
 /**
  * Phase 5 — Comprehensive End-to-End Integration & Product Acceptance Test Suite.
@@ -63,15 +63,15 @@ async function loadHandlers() {
     qLead,
     qLeaderboard,
   ] = await Promise.all([
-    import('./admin/login'),
-    import('./admin/logout'),
-    import('./admin/manage'),
-    import('./public/campaign'),
-    import('./quiz/session'),
-    import('./quiz/answer'),
-    import('./quiz/complete'),
-    import('./quiz/lead'),
-    import('./quiz/leaderboard'),
+    import('./admin/login.js'),
+    import('./admin/logout.js'),
+    import('./admin/manage.js'),
+    import('./public/campaign.js'),
+    import('./quiz/session.js'),
+    import('./quiz/answer.js'),
+    import('./quiz/complete.js'),
+    import('./quiz/lead.js'),
+    import('./quiz/leaderboard.js'),
   ]);
 
   adminLoginHandler = login.default;

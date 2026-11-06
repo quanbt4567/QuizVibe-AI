@@ -1,4 +1,4 @@
-import { AIQuizRequest } from './types';
+import { AIQuizRequest } from './types.js';
 
 /**
  * Builds the standardized system prompt and user prompt for quiz generation.

@@ -1,7 +1,7 @@
-export * from './types';
-export * from './config';
-export * from './supabaseServer';
-export * from './repository';
-export * from './rlsPreflight';
-export * from './migrationPreflightClassifier';
+export * from './types.js';
+export * from './config.js';
+export * from './supabaseServer.js';
+export * from './repository.js';
+export * from './rlsPreflight.js';
+export * from './migrationPreflightClassifier.js';
 

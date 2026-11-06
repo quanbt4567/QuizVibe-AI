@@ -17,9 +17,9 @@ import {
   QuizSessionStatus,
   VoucherInsert,
   VoucherRow,
-} from './types';
-import { assertServerRuntime } from './config';
-import { getSupabaseServerClient } from './supabaseServer';
+} from './types.js';
+import { assertServerRuntime } from './config.js';
+import { getSupabaseServerClient } from './supabaseServer.js';
 
 // Enforce server-only boundary at module load time
 assertServerRuntime();

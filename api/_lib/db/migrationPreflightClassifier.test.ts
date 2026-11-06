@@ -4,7 +4,7 @@ import {
   DatabaseSchemaSnapshot,
   REQUIRED_BASE_TABLES,
   REQUIRED_BASE_QUIZ_SESSION_COLUMNS,
-} from './migrationPreflightClassifier';
+} from './migrationPreflightClassifier.js';
 
 function createCleanPreMigrationSnapshot(): DatabaseSchemaSnapshot {
   return {

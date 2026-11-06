@@ -16,7 +16,7 @@ import {
   maskVietnamesePhone,
   isValidVietnamesePhoneServer,
   buildExplicitLocalStorageMigrationBundle,
-} from './index';
+} from './index.js';
 
 const VALID_TEST_ENV = {
   SUPABASE_URL: 'https://quizvibe-demo-ref.supabase.co',

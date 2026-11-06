@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
-import { FakePostgrest, FAKE_SUPABASE_HOST } from '../_lib/testing/fakePostgrest';
-import { mockHttp, tokenFromSetCookie } from '../_lib/testing/httpMock';
+import { FakePostgrest, FAKE_SUPABASE_HOST } from '../_lib/testing/fakePostgrest.js';
+import { mockHttp, tokenFromSetCookie } from '../_lib/testing/httpMock.js';
 
 const fake = new FakePostgrest();
 let restoreFetch: () => void;
@@ -22,8 +22,8 @@ let adminCookie = '';
 async function loadHandlers() {
   vi.resetModules();
   const [manage, login] = await Promise.all([
-    import('./manage'),
-    import('./login'),
+    import('./manage.js'),
+    import('./login.js'),
   ]);
   manageHandler = manage.default;
   loginHandler = login.default;

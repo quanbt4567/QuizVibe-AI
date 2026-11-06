@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AIProviderRouter } from './router';
-import { AIProvider, NormalizedQuestion, ProviderResult } from './types';
-import { validateAIOutput, validateClientRequest } from './validator';
-import { GroqProvider } from './providers/groqProvider';
-import { GeminiProvider } from './providers/geminiProvider';
+import { AIProviderRouter } from './router.js';
+import { AIProvider, NormalizedQuestion, ProviderResult } from './types.js';
+import { validateAIOutput, validateClientRequest } from './validator.js';
+import { GroqProvider } from './providers/groqProvider.js';
+import { GeminiProvider } from './providers/geminiProvider.js';
 
 describe('Story 2.2: Multi-Provider AI Gateway & Router', () => {
   const validMockQuestions: NormalizedQuestion[] = [

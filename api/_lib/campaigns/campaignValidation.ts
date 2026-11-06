@@ -1,4 +1,4 @@
-import { assertServerRuntime } from '../db/config';
+import { assertServerRuntime } from '../db/config.js';
 
 assertServerRuntime();
 

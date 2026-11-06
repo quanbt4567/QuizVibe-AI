@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
-import { assertServerRuntime } from '../db/config';
-import { getSupabaseServerClient } from '../db/supabaseServer';
+import { assertServerRuntime } from '../db/config.js';
+import { getSupabaseServerClient } from '../db/supabaseServer.js';
 
 // Enforce server-only boundary at module load time
 assertServerRuntime();

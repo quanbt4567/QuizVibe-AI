@@ -1,11 +1,11 @@
 import crypto from 'node:crypto';
-import { assertServerRuntime } from '../db/config';
+import { assertServerRuntime } from '../db/config.js';
 import {
   DatabaseOperationError,
   QuizVibeDatabaseRepository,
   slugifyCampaignTitle,
-} from '../db/repository';
-import type { CampaignStatus } from '../db/types';
+} from '../db/repository.js';
+import type { CampaignStatus } from '../db/types.js';
 import {
   AdminCampaignDto,
   AdminCampaignSummaryDto,
@@ -13,13 +13,13 @@ import {
   toAdminCampaignDto,
   toAdminCampaignSummaryDto,
   toPublicCampaignDto,
-} from './campaignDto';
+} from './campaignDto.js';
 import {
   buildSavePayload,
   isValidCampaignId,
   isValidPublicSlug,
   validateCampaignWriteInput,
-} from './campaignValidation';
+} from './campaignValidation.js';
 
 assertServerRuntime();
 

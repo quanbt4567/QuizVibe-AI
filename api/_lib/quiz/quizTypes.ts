@@ -1,4 +1,4 @@
-import type { QuizSessionStatus } from '../db/types';
+import type { QuizSessionStatus } from '../db/types.js';
 
 export type QuizErrorCode =
   | 'CAMPAIGN_NOT_FOUND'

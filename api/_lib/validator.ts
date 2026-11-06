@@ -1,4 +1,4 @@
-import { AIQuizRequest, NormalizedQuestion } from './types';
+import { AIQuizRequest, NormalizedQuestion } from './types.js';
 
 /**
  * Validates incoming client HTTP POST body.

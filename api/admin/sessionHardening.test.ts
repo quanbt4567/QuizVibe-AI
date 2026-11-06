@@ -76,21 +76,21 @@ function installFetchStub() {
   }) as typeof fetch;
 }
 
-type AuthModule = typeof import('../_lib/auth/adminAuth');
+type AuthModule = typeof import('../_lib/auth/adminAuth.js');
 
 /** A brand-new module registry == a brand-new serverless instance with empty process memory. */
 async function freshInstance(): Promise<AuthModule> {
   vi.resetModules();
-  return import('../_lib/auth/adminAuth');
+  return import('../_lib/auth/adminAuth.js');
 }
 
 async function loadHandlers() {
   vi.resetModules();
   const [login, session, logout, manage] = await Promise.all([
-    import('./login'),
-    import('./session'),
-    import('./logout'),
-    import('./manage'),
+    import('./login.js'),
+    import('./session.js'),
+    import('./logout.js'),
+    import('./manage.js'),
   ]);
   return {
     login: login.default,

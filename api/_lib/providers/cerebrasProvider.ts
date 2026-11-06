@@ -1,6 +1,6 @@
-import { AIProvider, AIQuizRequest, ProviderResult } from '../types';
-import { buildQuizPrompts } from '../prompt';
-import { sanitizeAndValidateAIOutput } from '../repairJson';
+import { AIProvider, AIQuizRequest, ProviderResult } from '../types.js';
+import { buildQuizPrompts } from '../prompt.js';
+import { sanitizeAndValidateAIOutput } from '../repairJson.js';
 
 /**
  * CerebrasProvider is optional and DISABLED by default per strict Free-Only budget policy.

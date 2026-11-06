@@ -1,9 +1,9 @@
 // @vitest-environment node
 import { describe, it, expect, beforeEach } from 'vitest';
-import loginHandler from './login';
-import logoutHandler from './logout';
-import sessionHandler from './session';
-import manageHandler from './manage';
+import loginHandler from './login.js';
+import logoutHandler from './logout.js';
+import sessionHandler from './session.js';
+import manageHandler from './manage.js';
 import {
   ADMIN_SESSION_COOKIE_NAME,
   AdminAuthConfigError,
@@ -11,11 +11,11 @@ import {
   resetAdminAuthTestState,
   validateAdminAuthEnv,
   verifyAdminSessionToken,
-} from '../_lib/auth';
+} from '../_lib/auth/index.js';
 import {
   classifyPostgrestRlsOutcome,
   runRlsPreflightCheck,
-} from '../_lib/db';
+} from '../_lib/db/index.js';
 
 const TEST_ADMIN_PASSWORD = 'QuizVibe_Admin_Strong_Pass_2026!';
 const TEST_SESSION_SECRET = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';

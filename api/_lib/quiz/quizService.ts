@@ -1,12 +1,12 @@
 import crypto from 'node:crypto';
-import { assertServerRuntime } from '../db/config';
-import { QuizVibeDatabaseRepository } from '../db/repository';
-import type { CompleteCampaignRecord, QuizSessionInsert } from '../db/types';
+import { assertServerRuntime } from '../db/config.js';
+import { QuizVibeDatabaseRepository } from '../db/repository.js';
+import type { CompleteCampaignRecord, QuizSessionInsert } from '../db/types.js';
 import {
   calculateSpeedScore,
   QUESTION_TIME_LIMIT_SECONDS,
   TOTAL_QUESTIONS,
-} from './quizScoring';
+} from './quizScoring.js';
 import {
   LeaderboardEntryDto,
   PublicQuestionPlayDto,
@@ -16,7 +16,7 @@ import {
   QuizLeadSubmitResponse,
   QuizSessionInitResponse,
   UnlockedVoucherDto,
-} from './quizTypes';
+} from './quizTypes.js';
 
 assertServerRuntime();
 

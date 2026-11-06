@@ -1,10 +1,10 @@
 // @vitest-environment node
 import crypto from 'node:crypto';
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
-import { FakePostgrest, FAKE_SUPABASE_HOST } from '../_lib/testing/fakePostgrest';
-import { mockHttp } from '../_lib/testing/httpMock';
-import { calculateSpeedScore } from '../_lib/quiz/quizScoring';
-import { QuizVibeDatabaseRepository } from '../_lib/db/repository';
+import { FakePostgrest, FAKE_SUPABASE_HOST } from '../_lib/testing/fakePostgrest.js';
+import { mockHttp } from '../_lib/testing/httpMock.js';
+import { calculateSpeedScore } from '../_lib/quiz/quizScoring.js';
+import { QuizVibeDatabaseRepository } from '../_lib/db/repository.js';
 
 const fake = new FakePostgrest();
 let restoreFetch: () => void;
@@ -26,11 +26,11 @@ let leaderboardHandler: any;
 async function loadHandlers() {
   vi.resetModules();
   const [session, answer, complete, lead, leaderboard] = await Promise.all([
-    import('./session'),
-    import('./answer'),
-    import('./complete'),
-    import('./lead'),
-    import('./leaderboard'),
+    import('./session.js'),
+    import('./answer.js'),
+    import('./complete.js'),
+    import('./lead.js'),
+    import('./leaderboard.js'),
   ]);
   sessionHandler = session.default;
   answerHandler = answer.default;

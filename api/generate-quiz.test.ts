@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import handler from './generate-quiz';
-import { AIProviderRouter } from './_lib/router';
+import handler from './generate-quiz.js';
+import { AIProviderRouter } from './_lib/router.js';
 
 vi.mock('./_lib/router');
 

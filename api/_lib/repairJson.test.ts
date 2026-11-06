@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { programmaticJsonRepair, sanitizeAndValidateAIOutput } from './repairJson';
-import { GeminiProvider } from './providers/geminiProvider';
-import { GroqProvider } from './providers/groqProvider';
+import { programmaticJsonRepair, sanitizeAndValidateAIOutput } from './repairJson.js';
+import { GeminiProvider } from './providers/geminiProvider.js';
+import { GroqProvider } from './providers/groqProvider.js';
 
 describe('Story 2.3: AI Resilience, Programmatic Repair & One-Shot Self-Repair', () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Database } from './types';
-import { assertServerRuntime, validateSupabaseServerEnv } from './config';
+import { Database } from './types.js';
+import { assertServerRuntime, validateSupabaseServerEnv } from './config.js';
 
 // Enforce server-only boundary at module load time
 assertServerRuntime();

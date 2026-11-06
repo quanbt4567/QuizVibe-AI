@@ -1,5 +1,5 @@
-import { NormalizedQuestion } from './types';
-import { validateAIOutput } from './validator';
+import { NormalizedQuestion } from './types.js';
+import { validateAIOutput } from './validator.js';
 
 export interface RepairResult {
   success: boolean;

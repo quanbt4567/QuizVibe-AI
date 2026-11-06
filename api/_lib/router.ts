@@ -3,10 +3,10 @@ import {
   AIQuizRequest,
   GatewayResponse,
   ProviderId,
-} from './types';
-import { GeminiProvider } from './providers/geminiProvider';
-import { GroqProvider } from './providers/groqProvider';
-import { CerebrasProvider } from './providers/cerebrasProvider';
+} from './types.js';
+import { GeminiProvider } from './providers/geminiProvider.js';
+import { GroqProvider } from './providers/groqProvider.js';
+import { CerebrasProvider } from './providers/cerebrasProvider.js';
 
 export interface RouterOptions {
   globalDeadlineMs?: number;

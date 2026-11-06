@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, vi } from 'vitest';
-import { FAKE_SUPABASE_HOST, FakePostgrest } from '../_lib/testing/fakePostgrest';
-import { mockHttp, tokenFromSetCookie } from '../_lib/testing/httpMock';
+import { FAKE_SUPABASE_HOST, FakePostgrest } from '../_lib/testing/fakePostgrest.js';
+import { mockHttp, tokenFromSetCookie } from '../_lib/testing/httpMock.js';
 
 /**
  * Phase 3: database-backed multi-campaign management, lifecycle, slugs, public publishing and
@@ -60,10 +60,10 @@ let cookie = '';
 async function loadHandlers(): Promise<Handlers> {
   vi.resetModules();
   const [login, manage, pub, logout] = await Promise.all([
-    import('./login'),
-    import('./manage'),
-    import('../public/campaign'),
-    import('./logout'),
+    import('./login.js'),
+    import('./manage.js'),
+    import('../public/campaign.js'),
+    import('./logout.js'),
   ]);
   return {
     login: login.default,
@@ -552,7 +552,7 @@ describe('Phase 3: Admin campaign management (database-backed)', () => {
 
     it('11b. sanitization is an explicit mapping: unexpected extra columns on a database row cannot leak', async () => {
       vi.resetModules();
-      const { toPublicCampaignDto } = await import('../_lib/campaigns/campaignDto');
+      const { toPublicCampaignDto } = await import('../_lib/campaigns/campaignDto.js');
       const dto = toPublicCampaignDto({
         campaign: {
           id: 'c1',
@@ -635,7 +635,7 @@ describe('Phase 3: Admin campaign management (database-backed)', () => {
   describe('13. AI-generated campaigns stay draft and enforce the 5x4 schema', () => {
     it('13. AI output validation still demands exactly 5 questions with 4 options and one valid answer each', async () => {
       vi.resetModules();
-      const { validateAIOutput } = await import('../_lib/validator');
+      const { validateAIOutput } = await import('../_lib/validator.js');
       const q = (i: number) => ({
         question: `Câu hỏi AI số ${i + 1}?`,
         options: ['a', 'b', 'c', 'd'],

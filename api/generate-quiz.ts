@@ -1,5 +1,5 @@
-import { validateClientRequest } from './_lib/validator';
-import { AIProviderRouter } from './_lib/router';
+import { validateClientRequest } from './_lib/validator.js';
+import { AIProviderRouter } from './_lib/router.js';
 
 // Load local environment variables if available (Node.js 20+ local runtime)
 if (typeof process.loadEnvFile === 'function') {

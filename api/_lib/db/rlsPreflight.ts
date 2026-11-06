@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { assertServerRuntime } from './config';
+import { assertServerRuntime } from './config.js';
 
 assertServerRuntime();
 
