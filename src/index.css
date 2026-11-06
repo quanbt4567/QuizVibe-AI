@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* ==========================================================================
+       Approved QuizVibe AI Unified Dark Design System Tokens (Hex Reference)
+       Admin: Raycast + Steep + Linear + Stripe
+       Player: Duolingo #2 + Quizlet
+       ========================================================================== */
+    --qv-canvas: #06080D;
+    --qv-card: #0B0E17;
+    --qv-recessed: #121723;
+    --qv-interactive: #1A2130;
+    --qv-border-subtle: #1E2433;
+    --qv-border-tactile: #2A3246;
+    --qv-border-tactile-depth: #1B2232;
+    --qv-text-primary: #F8FAFC;
+    --qv-text-secondary: #94A3B8;
+    --qv-text-muted: #8494AA;
+    --qv-brand-indigo: #6366F1;
+    --qv-brand-indigo-depth: #4338CA;
+    --qv-success: #10B981;
+    --qv-success-depth: #047857;
+    --qv-warning: #F59E0B;
+    --qv-warning-depth: #B45309;
+    --qv-danger: #F43F5E;
+    --qv-danger-depth: #BE123C;
+
+    /* ==========================================================================
+       HSL Channel Tokens (Supports Tailwind opacity modifiers e.g. bg-primary/15)
+       ========================================================================== */
+    --background: 223 37% 4%;        /* #06080D Primary Obsidian Canvas */
+    --foreground: 210 40% 98%;       /* #F8FAFC Primary Snow Text */
+
+    --card: 225 35% 7%;              /* #0B0E17 Elevated Card Surface */
+    --card-foreground: 210 40% 98%;  /* #F8FAFC */
+
+    --popover: 225 35% 7%;           /* #0B0E17 */
+    --popover-foreground: 210 40% 98%;
+
+    --recessed: 222 32% 10%;         /* #121723 Recessed Input Well & Track */
+    --interactive: 221 30% 15%;      /* #1A2130 Interactive Hover & Active Tab */
+
+    --primary: 239 84% 67%;          /* #6366F1 Brand Indigo */
+    --primary-depth: 245 58% 51%;    /* #4338CA Brand Indigo 3D Tactile Lip */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 222 32% 10%;        /* #121723 Recessed Secondary Surface */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 222 32% 10%;            /* #121723 Muted Container */
+    --muted-foreground: 215 20% 65%; /* #94A3B8 Secondary Slate Text */
+    --subtle-foreground: 215 20% 60%;/* #8494AA Accessible Muted Metadata (WCAG AA >= 5.2:1) */
+
+    --accent: 221 30% 15%;           /* #1A2130 Interactive Surface */
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 350 89% 60%;      /* #F43F5E Danger Rose */
+    --destructive-depth: 347 77% 50%;/* #BE123C Danger 3D Tactile Lip */
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 160 84% 39%;          /* #10B981 Emerald Success */
+    --success-depth: 163 94% 24%;    /* #047857 Emerald 3D Tactile Lip */
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;           /* #F59E0B Amber Warning / Reward */
+    --warning-depth: 32 95% 37%;     /* #B45309 Amber 3D Tactile Lip */
+    --warning-foreground: 0 0% 100%;
+
+    --border: 223 26% 16%;           /* #1E2433 Subtle 1px Hairline Border */
+    --border-tactile: 223 25% 22%;   /* #2A3246 Tactile 3D Card Border */
+    --border-tactile-depth: 222 30% 15%; /* #1B2232 Tactile 3D Bottom Lip Depth */
+    --input: 223 26% 16%;            /* #1E2433 Input Well Border */
+    --ring: 239 84% 67%;             /* #6366F1 Focus Ring */
+
+    /* Corner Radius Scale */
+    --radius-admin: 0.5rem;          /* 8px Admin compact controls */
+    --radius: 0.75rem;               /* 12px Default cards & Player controls */
+    --radius-player: 1rem;           /* 16px Player question cards */
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased font-sans min-h-screen leading-normal selection:bg-indigo-500 selection:text-white;
+  }
+
+  /* Vietnamese diacritics line-height safeguard for headings */
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.35;
+  }
+}
+
+@layer utilities {
+  /* Tabular numerals for scores, timers, rankings, phone numbers, and voucher codes */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Raycast-style key surface with 1px top specular highlight */
+  .surface-key {
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px -4px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Raycast/Steep elevated modal/panel shadow */
+  .surface-elevated {
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.07), 0 16px 40px -8px rgba(0, 0, 0, 0.65);
+  }
+}
+
+/* Global Reduced Motion Safeguard (WCAG 2.3.3 / G-03) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/((?!assets|src|node_modules|api|@|[^?]*\\.(?:html|css|js|ts|tsx|jsx|json|png|jpg|svg|ico)).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+
