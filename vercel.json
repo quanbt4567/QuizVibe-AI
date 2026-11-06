@@ -1,5 +1,19 @@
 {
   "framework": "vite",
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": ".*text/markdown.*"
+        }
+      ],
+      "destination": "/llms.txt",
+      "permanent": false
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
