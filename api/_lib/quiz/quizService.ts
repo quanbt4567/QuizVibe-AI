@@ -1,7 +1,8 @@
 import crypto from 'node:crypto';
 import { assertServerRuntime } from '../db/config.js';
-import { QuizVibeDatabaseRepository } from '../db/repository.js';
+import { CampaignValidationRecord, QuizVibeDatabaseRepository } from '../db/repository.js';
 import type { CompleteCampaignRecord, QuizSessionInsert } from '../db/types.js';
+import { campaignValidationCache } from './campaignCache.js';
 import {
   calculateSpeedScore,
   QUESTION_TIME_LIMIT_SECONDS,
@@ -72,6 +73,18 @@ export class QuizService {
       );
     }
 
+    // Pre-populate questions cache to optimize subsequent answer validation requests
+    campaignValidationCache.setQuestions(
+      campaign.id,
+      questions.map((q) => ({
+        question_order: q.question_order,
+        question_text: q.question_text,
+        options: q.options,
+        correct_index: q.correct_index,
+        explanation: q.explanation,
+      }))
+    );
+
     const sessionToken = crypto.randomBytes(32).toString('hex');
     const sessionTokenHash = hashPlayerSessionToken(sessionToken);
     const nowIso = new Date(this.now()).toISOString();
@@ -129,9 +142,24 @@ export class QuizService {
       throw new QuizError('SESSION_NOT_FOUND', 'Phiên chơi không tồn tại.', 404);
     }
 
-    // Verify campaign is still published; reject if admin unpublished or archived it midway
-    const campaignRecord = await this.repo.getCampaignById(session.campaign_id);
-    if (!campaignRecord || campaignRecord.campaign.status !== 'published') {
+    // Verify campaign is still published using cached validation data where available
+    // (reuses static questions and skips redundant voucher queries to minimize latency)
+    let campaignValidation: CampaignValidationRecord | null =
+      campaignValidationCache.getValidation(session.campaign_id);
+
+    if (!campaignValidation) {
+      const preCachedQuestions = campaignValidationCache.getQuestions(session.campaign_id);
+      campaignValidation = await this.repo.getCampaignValidationData(
+        session.campaign_id,
+        preCachedQuestions ?? undefined
+      );
+
+      if (campaignValidation && campaignValidation.status === 'published') {
+        campaignValidationCache.setValidation(session.campaign_id, campaignValidation);
+      }
+    }
+
+    if (!campaignValidation || campaignValidation.status !== 'published') {
       throw new QuizError(
         'CAMPAIGN_NOT_PUBLISHED',
         'Chiến dịch đã tạm dừng hoặc không còn khả dụng.',
@@ -155,7 +183,7 @@ export class QuizService {
       );
     }
 
-    const questions = campaignRecord.questions;
+    const questions = campaignValidation.questions;
     const targetQ = questions.find((q) => q.question_order === questionIndex);
     if (!targetQ) {
       throw new QuizError('INVALID_ANSWER_PAYLOAD', 'Không tìm thấy câu hỏi tương ứng.', 404);

@@ -6,6 +6,7 @@ import {
   slugifyCampaignTitle,
 } from '../db/repository.js';
 import type { CampaignStatus } from '../db/types.js';
+import { campaignValidationCache } from '../quiz/campaignCache.js';
 import {
   AdminCampaignDto,
   AdminCampaignSummaryDto,
@@ -285,6 +286,7 @@ export class CampaignService {
           'Trạng thái chiến dịch vừa được thay đổi bởi thao tác khác. Hãy tải lại và thử lại.'
         );
       }
+      campaignValidationCache.invalidate(id);
       return await this.readBackAfterWrite(id);
     } catch (err) {
       throw toServiceError(err);

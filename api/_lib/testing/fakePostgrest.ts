@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { campaignValidationCache } from '../quiz/campaignCache.js';
 
 /**
  * Minimal in-memory PostgREST emulator for tests (NOT a test file: no `.test.` in the name).
@@ -40,6 +41,7 @@ export class FakePostgrest {
     this.requests = [];
     this.failure = null;
     this.forceSlugCollisions = 0;
+    campaignValidationCache.clear();
   }
 
   public install(): () => void {

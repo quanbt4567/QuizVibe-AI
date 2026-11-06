@@ -20,6 +20,7 @@ import {
 } from './types.js';
 import { assertServerRuntime } from './config.js';
 import { getSupabaseServerClient } from './supabaseServer.js';
+import { campaignValidationCache } from '../quiz/campaignCache.js';
 
 // Enforce server-only boundary at module load time
 assertServerRuntime();
@@ -102,6 +103,18 @@ export interface CreateCampaignDetailsInput {
     expiry_date?: string | null;
     terms?: string | null;
   };
+}
+
+export interface CampaignValidationRecord {
+  id: string;
+  status: CampaignStatus;
+  questions: Array<{
+    question_order: number;
+    question_text: string;
+    options: [string, string, string, string];
+    correct_index: number;
+    explanation?: string | null;
+  }>;
 }
 
 export interface CreateLeadServerInput {
@@ -530,6 +543,83 @@ export class QuizVibeDatabaseRepository {
   }
 
   /**
+   * Fetches only the minimal campaign status and questions required for gameplay answer validation.
+   * Runs queries concurrently where possible and completely skips the unused vouchers table.
+   * If preCachedQuestions are provided, only queries the campaign status to verify active publishing.
+   */
+  public async getCampaignValidationData(
+    campaignId: string,
+    preCachedQuestions?: Array<{
+      question_order: number;
+      question_text: string;
+      options: [string, string, string, string];
+      correct_index: number;
+      explanation?: string | null;
+    }>
+  ): Promise<CampaignValidationRecord | null> {
+    if (!campaignId) return null;
+
+    if (preCachedQuestions && preCachedQuestions.length > 0) {
+      const { data: camp, error: campError } = await this.db
+        .from('campaigns')
+        .select('id, status')
+        .eq('id', campaignId)
+        .maybeSingle();
+
+      if (campError) {
+        throw new DatabaseOperationError(
+          'CAMPAIGN_QUERY_FAILED',
+          `Failed to fetch campaign status for "${campaignId}": ${campError.message}`,
+          campError
+        );
+      }
+      if (!camp) return null;
+
+      return {
+        id: camp.id,
+        status: camp.status as CampaignStatus,
+        questions: preCachedQuestions,
+      };
+    }
+
+    const [campRes, questRes] = await Promise.all([
+      this.db
+        .from('campaigns')
+        .select('id, status')
+        .eq('id', campaignId)
+        .maybeSingle(),
+      this.db
+        .from('campaign_questions')
+        .select('question_order, question_text, options, correct_index, explanation')
+        .eq('campaign_id', campaignId)
+        .order('question_order', { ascending: true }),
+    ]);
+
+    if (campRes.error) {
+      throw new DatabaseOperationError(
+        'CAMPAIGN_QUERY_FAILED',
+        `Failed to fetch campaign status for "${campaignId}": ${campRes.error.message}`,
+        campRes.error
+      );
+    }
+    if (!campRes.data) return null;
+
+    if (questRes.error) {
+      throw new DatabaseOperationError(
+        'QUESTIONS_QUERY_FAILED',
+        `Failed to fetch campaign questions for "${campaignId}": ${questRes.error.message}`,
+        questRes.error
+      );
+    }
+
+    return {
+      id: campRes.data.id,
+      status: campRes.data.status as CampaignStatus,
+      questions: (questRes.data ?? []) as CampaignValidationRecord['questions'],
+    };
+  }
+
+  /**
    * Concurrency-safe atomic question progression.
    * Uses compare-and-set on `status = 'in_progress'` and `current_question_index = expectedQuestionIndex`.
    * Returns null if another concurrent request already advanced this question index.
@@ -835,6 +925,7 @@ export class QuizVibeDatabaseRepository {
       );
     }
 
+    campaignValidationCache.invalidate(data);
     return data;
   }
 
@@ -861,6 +952,10 @@ export class QuizVibeDatabaseRepository {
         `Failed to change campaign status to "${to}": ${error.message}`,
         error
       );
+    }
+
+    if (data && data.length > 0) {
+      campaignValidationCache.invalidate(campaignId);
     }
 
     const rows = (data ?? []) as CampaignRow[];
