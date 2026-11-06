@@ -344,26 +344,11 @@ export class QuizVibeDatabaseRepository {
       );
     }
 
-    const insertPayload: QuizSessionInsert = { ...input };
-    let { data, error } = await this.db
+    const { data, error } = await this.db
       .from('quiz_sessions')
-      .insert(insertPayload)
+      .insert(input)
       .select('*')
       .single();
-
-    // Resilient fallback for contract phase:
-    // If insert failed because column 'session_token' was dropped (post-contract migration),
-    // automatically strip session_token and retry with only session_token_hash.
-    if (error && insertPayload.session_token && error.message?.includes('session_token')) {
-      const { session_token: _, ...withoutLegacyToken } = insertPayload;
-      const retry = await this.db
-        .from('quiz_sessions')
-        .insert(withoutLegacyToken)
-        .select('*')
-        .single();
-      data = retry.data;
-      error = retry.error;
-    }
 
     if (error || !data) {
       throw new DatabaseOperationError(
@@ -490,48 +475,17 @@ export class QuizVibeDatabaseRepository {
   }
 
   /**
-   * Retrieves a quiz gameplay session given a raw player token.
-   * 1. Primary path: Hashes token with SHA-256 and queries by session_token_hash.
-   * 2. Backward-compatible fallback: If not found by hash (e.g. legacy session created before migration backfill),
-   *    attempts lookup by plaintext session_token. If found, lazily backfills session_token_hash.
+   * Retrieves a quiz gameplay session given a raw player bearer token.
+   * Computes the SHA-256 hash and performs a hash-only indexed B-tree lookup.
+   * Player tokens are never stored, queried, or logged in plaintext at rest.
    */
   public async getQuizSessionByToken(token: string): Promise<QuizSessionRow | null> {
     if (!token) return null;
     const cleanToken = token.trim();
+    if (!cleanToken) return null;
     const tokenHash = crypto.createHash('sha256').update(cleanToken).digest('hex');
 
-    // 1. Primary path: query by SHA-256 hash (fast B-tree index lookup)
-    const session = await this.getQuizSessionByTokenHash(tokenHash);
-    if (session) return session;
-
-    // 2. Backward-compatibility fallback during Expand phase:
-    try {
-      const { data, error } = await this.db
-        .from('quiz_sessions')
-        .select('*')
-        .eq('session_token', cleanToken)
-        .maybeSingle();
-
-      if (!error && data) {
-        const row = data as QuizSessionRow;
-        if (!row.session_token_hash) {
-          try {
-            await this.db
-              .from('quiz_sessions')
-              .update({ session_token_hash: tokenHash })
-              .eq('id', row.id);
-            row.session_token_hash = tokenHash;
-          } catch {
-            // Non-fatal if update fails
-          }
-        }
-        return row;
-      }
-    } catch {
-      // Post-contract migration: session_token column does not exist; safely ignore
-    }
-
-    return null;
+    return this.getQuizSessionByTokenHash(tokenHash);
   }
 
   /**

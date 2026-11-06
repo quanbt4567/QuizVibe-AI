@@ -122,7 +122,6 @@ export type QuizSessionRow = {
   started_at: string;
   completed_at: string | null;
   created_at: string;
-  session_token?: string | null;
   session_token_hash?: string | null;
   current_question_index?: number;
   current_question_started_at?: string;
@@ -140,7 +139,6 @@ export type QuizSessionInsert = {
   started_at?: string;
   completed_at?: string | null;
   created_at?: string;
-  session_token?: string | null;
   session_token_hash?: string | null;
   current_question_index?: number;
   current_question_started_at?: string;

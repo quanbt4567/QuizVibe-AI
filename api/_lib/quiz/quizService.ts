@@ -90,15 +90,6 @@ export class QuizService {
       started_at: nowIso,
     };
 
-    // Phase 4.3 Bidirectional Overlap Compatibility:
-    // During the deployment compatibility window, dual-write session_token so that
-    // any request hitting an undrained legacy Vercel Function instance can authenticate
-    // via session_token.
-    // Can be disabled via ENABLE_LEGACY_SESSION_TOKEN_WRITE=false after old instances drain.
-    if (process.env.ENABLE_LEGACY_SESSION_TOKEN_WRITE !== 'false') {
-      sessionInsert.session_token = sessionToken;
-    }
-
     const createdSession = await this.repo.createQuizSession(sessionInsert);
 
     const firstQ = questions[0];
