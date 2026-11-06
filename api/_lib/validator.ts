@@ -26,6 +26,10 @@ export function validateClientRequest(body: unknown): {
     return { valid: false, error: 'Ngành hàng (industry) không được để trống.' };
   }
 
+  if (industry.length > 100) {
+    return { valid: false, error: 'Ngành hàng (industry) tối đa 100 ký tự.' };
+  }
+
   return {
     valid: true,
     data: {

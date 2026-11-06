@@ -19,6 +19,7 @@ import { StorageService, generateQuizFromAI } from '../../services';
 import { AdminRouteSection } from '../../router/appRouter';
 import { QuizBuilder } from './QuizBuilder';
 import { AIReviewGate, DraftCampaignData } from './AIReviewGate';
+import { IndustrySelect } from './IndustrySelect';
 import { LeadDashboard } from './LeadDashboard';
 import { VoucherConfig } from './VoucherConfig';
 import { CampaignManager } from './CampaignManager';
@@ -249,11 +250,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       return;
     }
 
+    const cleanIndustry = aiIndustry.trim();
+    if (!cleanIndustry) {
+      setGenerationError('Vui lòng chọn hoặc nhập ngành hàng của bạn.');
+      return;
+    }
+    if (cleanIndustry.length > 100) {
+      setGenerationError('Ngành hàng tối đa 100 ký tự.');
+      return;
+    }
+
     setIsGenerating(true);
     setGenerationError(null);
     setCanFallback(false);
 
-    const result = await generateQuizFromAI(aiTopic, aiIndustry, aiDifficulty);
+    const result = await generateQuizFromAI(aiTopic, cleanIndustry, aiDifficulty);
 
     setIsGenerating(false);
 
@@ -262,7 +273,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       setReviewDraft({
         title: `Quiz AI: ${aiTopic.trim()}`,
         description: `Thử thách trắc nghiệm được tạo bởi ${result.provider?.toUpperCase() || 'AI'} dành riêng cho khách hàng.`,
-        industry: aiIndustry,
+        industry: cleanIndustry,
         questions: result.questions,
         voucher: campaign?.voucher || {
           code: 'AIPROMO20',
@@ -420,19 +431,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </div>
 
                   <div className="sm:col-span-3">
-                    <label className="block text-xs font-medium text-content-secondary mb-1.5">
-                      Ngành hàng
-                    </label>
-                    <select
+                    <IndustrySelect
+                      label="Ngành hàng"
+                      selectId="ai-industry-select"
+                      inputId="ai-custom-industry-input"
                       value={aiIndustry}
-                      onChange={(e) => setAiIndustry(e.target.value)}
-                      className="flex h-10 w-full rounded-admin border border-input bg-recessed px-3 py-2 text-sm text-foreground leading-snug shadow-inset-well focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary transition-colors cursor-pointer"
-                    >
-                      <option value="Mỹ phẩm & Chăm sóc da">Mỹ phẩm & Chăm sóc da</option>
-                      <option value="Thời trang & Phụ kiện">Thời trang & Phụ kiện</option>
-                      <option value="Công nghệ & Phụ kiện">Công nghệ & Phụ kiện</option>
-                      <option value="Ẩm thực & Đồ uống (F&B)">Ẩm thực & Đồ uống (F&B)</option>
-                    </select>
+                      onChange={setAiIndustry}
+                      onClearError={() => {
+                        if (generationError) setGenerationError(null);
+                      }}
+                    />
                   </div>
 
                   <div className="sm:col-span-3">
@@ -836,20 +844,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </div>
 
                   <div className="sm:col-span-3">
-                    <label className="block text-xs font-medium text-content-secondary mb-1.5">
-                      Ngành hàng phù hợp
-                    </label>
-                    <select
+                    <IndustrySelect
+                      label="Ngành hàng phù hợp"
+                      selectId="ai-industry-select-fallback"
+                      inputId="ai-custom-industry-input-fallback"
                       value={aiIndustry}
-                      onChange={(e) => setAiIndustry(e.target.value)}
-                      className="flex h-10 w-full rounded-admin border border-input bg-recessed px-3 py-2 text-sm text-foreground leading-snug shadow-inset-well focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary transition-colors cursor-pointer"
-                    >
-                      <option value="Mỹ phẩm & Chăm sóc da">Mỹ phẩm &amp; Chăm sóc da</option>
-                      <option value="Thời trang & Phụ kiện">Thời trang &amp; Phụ kiện</option>
-                      <option value="Công nghệ & Phụ kiện">Công nghệ &amp; Phụ kiện</option>
-                      <option value="Ẩm thực & Đồ uống (F&B)">Ẩm thực &amp; Đồ uống (F&amp;B)</option>
-                      <option value="Khác">Khác</option>
-                    </select>
+                      onChange={setAiIndustry}
+                      onClearError={() => {
+                        if (generationError) setGenerationError(null);
+                      }}
+                    />
                   </div>
 
                   <div className="sm:col-span-3">

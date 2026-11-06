@@ -20,6 +20,7 @@ import {
 import { StorageService } from '../../services';
 import { validateManualQuizForm } from '../../services/validators';
 import { VoucherConfig } from './VoucherConfig';
+import { IndustrySelect } from './IndustrySelect';
 import type { PersistCampaign } from './persistence';
 import { Button, Badge, Card, Input } from '../ui';
 
@@ -42,14 +43,6 @@ export interface AIReviewGateProps {
   onDiscardOrCancel: () => void;
   persistCampaign?: PersistCampaign;
 }
-
-const STANDARD_INDUSTRY_OPTIONS = [
-  'Mỹ phẩm & Chăm sóc da',
-  'Thời trang & Phụ kiện',
-  'Công nghệ & Phụ kiện',
-  'Ẩm thực & Đồ uống (F&B)',
-  'Khác',
-];
 
 export const AIReviewGate: React.FC<AIReviewGateProps> = ({
   draft,
@@ -351,9 +344,6 @@ export const AIReviewGate: React.FC<AIReviewGateProps> = ({
   };
 
   const optionLetters = ['A', 'B', 'C', 'D'];
-  const industryOptions = STANDARD_INDUSTRY_OPTIONS.includes(industry)
-    ? STANDARD_INDUSTRY_OPTIONS
-    : [industry, ...STANDARD_INDUSTRY_OPTIONS];
 
   return (
     <div className="space-y-6">
@@ -474,18 +464,14 @@ export const AIReviewGate: React.FC<AIReviewGateProps> = ({
           </div>
 
           <div>
-            <label
-              htmlFor="review-industry-select"
-              className="block text-xs font-medium text-content-secondary mb-1.5"
-            >
-              Ngành hàng / Lĩnh vực <span className="text-destructive">*</span>
-            </label>
-            <select
-              id="review-industry-select"
-              aria-label="Ngành hàng / Lĩnh vực"
+            <IndustrySelect
+              label="Ngành hàng / Lĩnh vực"
+              required
+              selectId="review-industry-select"
+              inputId="review-custom-industry-input"
               value={industry}
-              onChange={(e) => {
-                setIndustry(e.target.value);
+              onChange={(val) => {
+                setIndustry(val);
                 if (errors['industry']) {
                   setErrors((prev) => {
                     const copy = { ...prev };
@@ -494,23 +480,8 @@ export const AIReviewGate: React.FC<AIReviewGateProps> = ({
                   });
                 }
               }}
-              className={`flex h-10 w-full rounded-admin border bg-recessed px-3 py-2 text-sm text-foreground leading-snug shadow-inset-well focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary transition-colors cursor-pointer ${
-                errors['industry']
-                  ? 'border-destructive focus-visible:ring-destructive'
-                  : 'border-input'
-              }`}
-            >
-              {industryOptions.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-            {errors['industry'] && (
-              <p className="mt-1.5 flex items-center text-xs text-destructive">
-                <AlertCircle className="mr-1 h-3.5 w-3.5 shrink-0" /> {errors['industry']}
-              </p>
-            )}
+              error={errors['industry']}
+            />
           </div>
 
           <div className="sm:col-span-2">

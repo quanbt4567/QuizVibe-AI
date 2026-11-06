@@ -14,7 +14,7 @@ export const CAMPAIGN_OPTION_COUNT = 4;
 export const LIMITS = {
   title: { min: 3, max: 120 },
   description: { max: 500 },
-  industry: { min: 1, max: 80 },
+  industry: { min: 1, max: 100 },
   mockLabel: { max: 120 },
   question: { min: 5, max: 300 },
   option: { min: 1, max: 150 },

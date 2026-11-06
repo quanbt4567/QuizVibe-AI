@@ -205,6 +205,8 @@ export function validateManualQuizForm(data: {
 
   if (!data.industry || data.industry.trim().length === 0) {
     fieldErrors['industry'] = 'Vui lòng chọn hoặc nhập ngành hàng.';
+  } else if (data.industry.trim().length > 100) {
+    fieldErrors['industry'] = 'Ngành hàng tối đa 100 ký tự.';
   }
 
   // 2. Questions validation

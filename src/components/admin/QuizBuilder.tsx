@@ -14,6 +14,7 @@ import { Campaign, Question, VoucherConfig as VoucherConfigType } from '../../ty
 import { StorageService } from '../../services';
 import { validateManualQuizForm } from '../../services/validators';
 import { VoucherConfig } from './VoucherConfig';
+import { IndustrySelect } from './IndustrySelect';
 import type { PersistCampaign } from './persistence';
 import { Button, Badge, Card, Input } from '../ui';
 
@@ -434,20 +435,24 @@ export const QuizBuilder: React.FC<QuizBuilderProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-content-secondary mb-1.5">
-              Ngành hàng <span className="text-destructive">*</span>
-            </label>
-            <select
+            <IndustrySelect
+              label="Ngành hàng"
+              required
+              selectId="builder-industry-select"
+              inputId="builder-custom-industry-input"
               value={industry}
-              onChange={(e) => setIndustry(e.target.value)}
-              className="flex h-10 w-full rounded-admin border border-input bg-recessed px-3 py-2 text-sm text-foreground leading-snug shadow-inset-well focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary transition-colors cursor-pointer"
-            >
-              <option value="Thời trang & Phụ kiện">Thời trang &amp; Phụ kiện</option>
-              <option value="Mỹ phẩm & Chăm sóc da">Mỹ phẩm &amp; Chăm sóc da</option>
-              <option value="Công nghệ & Phụ kiện">Công nghệ &amp; Phụ kiện</option>
-              <option value="Ẩm thực & Đồ uống (F&B)">Ẩm thực &amp; Đồ uống (F&amp;B)</option>
-              <option value="Khác">Khác</option>
-            </select>
+              onChange={(val) => {
+                setIndustry(val);
+                if (errors['industry']) {
+                  setErrors((prev) => {
+                    const copy = { ...prev };
+                    delete copy['industry'];
+                    return copy;
+                  });
+                }
+              }}
+              error={errors['industry']}
+            />
           </div>
 
           <div className="sm:col-span-3">
