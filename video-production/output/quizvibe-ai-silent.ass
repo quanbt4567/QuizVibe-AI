@@ -1,0 +1,21 @@
+﻿[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+ScaledBorderAndShadow: yes
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cinema,Arial,42,&H00FFFFFF,&H00FFFFFF,&H80000000,&H80000000,0,0,0,0,100,100,0,0,3,0,0,2,40,40,60,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:04.00,0:00:13.53,Cinema,,0,0,0,,QuizVibe AI: Nền tảng Minigame Quiz thu Lead Fanpage thông minh
+Dialogue: 0,0:00:13.53,0:00:21.51,Cinema,,0,0,0,,Admin Studio: Quản lý chiến dịch tập trung, bảo mật HttpOnly Cookie phía máy chủ
+Dialogue: 0,0:00:21.51,0:00:33.98,Cinema,,0,0,0,,Tạo Quiz bằng AI: Tự động sinh 5 câu hỏi trắc nghiệm kèm Cổng kiểm duyệt nội dung
+Dialogue: 0,0:00:33.98,0:00:48.11,Cinema,,0,0,0,,Chơi Quiz: Đếm ngược 30 giây mỗi câu, cộng điểm thưởng tốc độ phản xạ
+Dialogue: 0,0:00:48.11,0:00:58.17,Cinema,,0,0,0,,Màn hình kết quả: Tổng điểm đạt được và giải thích chi tiết kiến thức từng câu
+Dialogue: 0,0:00:58.17,0:01:03.60,Cinema,,0,0,0,,Thu thập Lead & Mở khóa Voucher: Tiếp nhận thông tin khách hàng, cấp mã ưu đãi độc quyền
+Dialogue: 0,0:01:03.60,0:01:09.71,Cinema,,0,0,0,,Bảng xếp hạng Top 10: Xếp hạng người chơi xuất sắc nhất theo thời gian thực
+Dialogue: 0,0:01:09.71,0:01:15.36,Cinema,,0,0,0,,Chia sẻ kết quả: Lan tỏa minigame lên Fanpage, tối ưu tương tác tự nhiên

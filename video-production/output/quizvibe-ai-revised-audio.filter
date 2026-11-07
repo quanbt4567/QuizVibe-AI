@@ -1,0 +1,12 @@
+[0:a]adelay=150|150[a0];
+[1:a]adelay=8070|8070[a1];
+[2:a]adelay=16912|16912[a2];
+[3:a]adelay=25927|25927[a3];
+[4:a]adelay=37043|37043[a4];
+[5:a]adelay=51907|51907[a5];
+[6:a]adelay=59986|59986[a6];
+[7:a]adelay=70424|70424[a7];
+[8:a]adelay=78869|78869[a8];
+[9:a]adelay=87239|87239[a9];
+[a0][a1][a2][a3][a4][a5][a6][a7][a8][a9]amix=inputs=10:duration=longest:dropout_transition=0,volume=1.35[voice];
+aevalsrc=exprs='0.015*sin(2*PI*174.61*t)+0.012*sin(2*PI*220.00*t)+0.010*sin(2*PI*261.63*t)+0.008*sin(2*PI*349.23*t)':d=94.03:s=48000[rawbg];[rawbg]lowpass=f=650,afade=t=in:ss=0:d=2.0,afade=t=out:st=91.03:d=3.0,volume=0.22[bg];[voice][bg]amix=inputs=2:duration=first:dropout_transition=0,alimiter=limit=0.95[finalaudio]

@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "actions": [
+    {
+      "type": "goto",
+      "url": "${DEMO_START_URL}"
+    },
+    {
+      "type": "wait_for",
+      "selector": "REPLACE_WITH_VERIFIED_READY_SELECTOR",
+      "state": "visible",
+      "timeout_ms": 30000
+    },
+    {
+      "type": "marker",
+      "name": "feature-start"
+    },
+    {
+      "type": "click",
+      "selector": "REPLACE_WITH_VERIFIED_SELECTOR"
+    },
+    {
+      "type": "wait_for",
+      "selector": "REPLACE_WITH_VERIFIED_RESULT_SELECTOR",
+      "state": "visible",
+      "timeout_ms": 30000
+    },
+    {
+      "type": "marker",
+      "name": "feature-end"
+    }
+  ]
+}

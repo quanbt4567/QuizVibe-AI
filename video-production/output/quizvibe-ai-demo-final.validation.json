@@ -1,0 +1,23 @@
+{
+  "video": "D:\\VibeCoding\\QuizVibe-AI\\video-production\\output\\quizvibe-ai-demo-final.mp4",
+  "valid": true,
+  "actual": {
+    "probe_backend": "ffprobe",
+    "codec": "h264",
+    "width": 1920,
+    "height": 1080,
+    "fps": 60.0,
+    "duration": 79.3,
+    "audio_streams": 1,
+    "decode_ok": true
+  },
+  "expected": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "duration_limit": 120,
+    "audio": true
+  },
+  "contact_sheet": "D:\\VibeCoding\\QuizVibe-AI\\video-production\\output\\contact-sheet.jpg",
+  "errors": []
+}

@@ -1,0 +1,116 @@
+{
+  "timestamp": "2026-11-07T13:31:44.140Z",
+  "apiHealth": {
+    "status": 200,
+    "ok": true,
+    "data": {
+      "status": "ok",
+      "service": "quizvibe-ai",
+      "version": "1.0.0",
+      "timestamp": "2026-11-06T16:00:00.000Z"
+    }
+  },
+  "apiPublicCampaign": {
+    "status": 200,
+    "ok": true,
+    "data": {
+      "ok": true,
+      "campaign": {
+        "id": "0b1af5c8-aa4c-4199-9cf0-7e4d16f746b5",
+        "slug": "quiz-ai-cac-thu-do-cua-cac-nuoc",
+        "title": "Quiz AI: Các thủ đô của các nước",
+        "description": "Thử thách trắc nghiệm được tạo bởi GROQ dành riêng cho khách hàng.",
+        "industry": "Du lịch & Khách sạn",
+        "isMock": false,
+        "publishedAt": "2026-11-07T12:09:39.103+00:00",
+        "questionCount": 5,
+        "questions": [
+          {
+            "id": "9b639ef5-2a41-470c-9049-33366f676285",
+            "order": 0,
+            "question": "Thủ đô của Mongolia là gì?",
+            "options": [
+              "Ulaanbaatar",
+              "Astana",
+              "Bishkek",
+              "Tashkent"
+            ]
+          },
+          {
+            "id": "75d9ccdb-c5a1-4758-bf25-7d41980bf94e",
+            "order": 1,
+            "question": "Thủ đô của Paraguay là?",
+            "options": [
+              "Asunción",
+              "Montevideo",
+              "Buenos Aires",
+              "Santiago"
+            ]
+          },
+          {
+            "id": "842d684b-7d84-4c3b-b242-60b89e9badfb",
+            "order": 2,
+            "question": "Thủ đô của Suriname là?",
+            "options": [
+              "Paramaribo",
+              "Georgetown",
+              "Cayenne",
+              "Willemstad"
+            ]
+          },
+          {
+            "id": "7e7a89f1-766c-4325-8e88-b66234d69796",
+            "order": 3,
+            "question": "Thủ đô của Lào là?",
+            "options": [
+              "Vientiane",
+              "Hanoi",
+              "Phnom Penh",
+              "Luang Prabang"
+            ]
+          },
+          {
+            "id": "57e07ecc-9901-47cb-ab2e-16a7aed8dd69",
+            "order": 4,
+            "question": "Thủ đô của Kiribati là?",
+            "options": [
+              "Tarawa",
+              "Majuro",
+              "Funafuti",
+              "Ngerulmud"
+            ]
+          }
+        ],
+        "voucher": {
+          "discount": "Giảm 100% cho đơn từ 100.000đ",
+          "description": "Áp dụng khi mua khoá học về thế giới",
+          "expiryDate": "7 ngày sau khi nhận",
+          "terms": "Hạn dùng 7 ngày kể từ khi nhận mã. Áp dụng cho khách hàng hợp lệ trên Fanpage."
+        }
+      }
+    }
+  },
+  "landingPage": {
+    "url": "https://quiz-vibe-ai.vercel.app/",
+    "title": "QuizVibe AI — Minigame Quiz Thu Lead Fanpage",
+    "h1": "Quiz AI: Các thủ đô của các nước",
+    "badges": [],
+    "buttons": [
+      "Đua Top 10Ghi danh bảng xếp hạng cao thủ và nhận ngay mã voucher ưu đãi.",
+      "Bắt đầu chơi ngay!"
+    ],
+    "bodySnippet": "QuizVibe AI\nQuiz AI: Các thủ đô của các nước\nDu lịch & Khách sạn\n5 câu\nQuiz AI: Các thủ đô của các nước\n\nThử thách trắc nghiệm được tạo bởi GROQ dành riêng cho khách hàng.\n\nPhần thưởng vượt qua thử thách\n\nGiảm 100% cho đơn từ 100.000đ\nMã ưu đãi\n••••••\n\nÁp dụng khi mua khoá học về thế giới\n\nHạn sử dụng: 7 ngày sau khi nhận\n\n* Hạn dùng 7 ngày kể từ khi nhận mã. Áp dụng cho khách hàng hợp lệ trên Fanpage.\n\n30s Mỗi câu\n\nTối đa 30 giây mỗi câu. Trả lời càng nhanh, điểm tốc độ càng cao!\n\nĐua Top 10\n\nG",
+    "screenshot": "D:\\VibeCoding\\QuizVibe-AI\\video-production\\diagnostics\\prod-landing.png"
+  },
+  "adminLoginPage": {
+    "url": "https://quiz-vibe-ai.vercel.app/admin/login",
+    "title": "QuizVibe AI — Minigame Quiz Thu Lead Fanpage",
+    "h1": "Đăng nhập Quản trị viên",
+    "buttons": [
+      "Trang người chơi",
+      "Đăng nhập vào Admin Studio"
+    ],
+    "bodySnippet": "QuizVibe AI\nSTUDIO\nTrang người chơi\nĐăng nhập Quản trị viên\n\nKhu vực dành riêng cho Quản trị viên biên tập chiến dịch, cấu hình voucher và quản lý danh sách khách hàng tiềm năng.\n\nMật khẩu Quản trị *\nĐăng nhập vào Admin Studio\nPhiên đăng nhập được bảo vệ bằng HttpOnly Cookie phía máy chủ.\n\nQuizVibe AI Studio © 2026",
+    "screenshot": "D:\\VibeCoding\\QuizVibe-AI\\video-production\\diagnostics\\prod-admin-login.png"
+  }
+}

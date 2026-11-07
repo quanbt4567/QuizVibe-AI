@@ -1,0 +1,84 @@
+================================================================================
+KỊCH BẢN LỜI DẪN TIẾNG VIỆT (NARRATION SCRIPT) — QUIZVIBE AI DEMO
+Dự án: QuizVibe AI — Minigame Quiz Thu Lead Thông Minh Cho Fanpage
+Đề bài: VIBE-CODING 2026 Bảng A — Thử Thách 3
+Thời lượng chuẩn: 120 giây (02:00) | Độ phân giải: 1920x1080 | 60 FPS
+Giọng đọc: Nam/Nữ truyền cảm, hiện đại, phong thái chuyên nghiệp, tốc độ chuẩn (~130 từ/phút)
+================================================================================
+
+[0:00 - 0:04] (04 giây) — PHÂN ĐOẠN 1: MỞ ĐẦU (OPENING)
+Bối cảnh giao diện: Màn hình nhận diện thương hiệu QuizVibe AI.
+[Môi trường: DEMO LOCAL — http://localhost:3000]
+Lời dẫn (Voiceover — 14 từ):
+"Chào mừng bạn đến với QuizVibe AI — nền tảng minigame trắc nghiệm thu hút khách hàng tiềm năng cho Fanpage."
+
+--------------------------------------------------------------------------------
+[0:04 - 0:16] (12 giây) — PHÂN ĐOẠN 2: LANDING PAGE CHIẾN DỊCH
+Bối cảnh giao diện: Trang công khai chiến dịch "Quiz AI: Khám phá Ẩm thực Hà Nội".
+[Môi trường: DEMO LOCAL — http://localhost:3000/]
+Lời dẫn (Voiceover — 30 từ):
+"Tại trang minigame công khai, người chơi dễ dàng nắm bắt tiêu đề chiến dịch ẩm thực, quy định ba mươi giây mỗi câu hỏi cùng cơ hội nhận ngay mã voucher ưu đãi độc quyền."
+
+--------------------------------------------------------------------------------
+[0:16 - 0:28] (12 giây) — PHÂN ĐOẠN 3: ADMIN STUDIO & QUẢN TRỊ TẬP TRUNG
+Bối cảnh giao diện: Đăng nhập Admin và Bảng điều khiển Tổng quan Studio.
+[Môi trường: DEMO LOCAL — http://localhost:3000/admin/login & /admin]
+Lời dẫn (Voiceover — 28 từ):
+"Khu vực quản trị được bảo vệ an toàn bằng phiên làm việc máy chủ. Bảng điều khiển giúp nhà quản trị theo dõi tổng quan các chiến dịch, tỷ lệ hoàn thành và danh sách khách hàng tham gia."
+
+--------------------------------------------------------------------------------
+[0:28 - 0:48] (20 giây) — PHÂN ĐOẠN 4: TẠO QUIZ BẰNG AI & REVIEW GATE (TÍNH NĂNG 1)
+Bối cảnh giao diện: Nhập chủ đề ẩm thực, AI sinh 5 câu hỏi trong 320ms và Cổng kiểm duyệt nội dung.
+[Môi trường: DEMO LOCAL — http://localhost:3000/admin/campaigns/new]
+Lời dẫn (Voiceover — 48 từ):
+"Chỉ cần nhập chủ đề mong muốn, trí tuệ nhân tạo sẽ tự động biên soạn năm câu hỏi trắc nghiệm kèm giải thích chuẩn xác. Trước khi kích hoạt, quản trị viên dễ dàng rà soát qua Cổng kiểm duyệt nội dung, chỉnh sửa phương án và thiết lập mức ưu đãi cho voucher."
+
+--------------------------------------------------------------------------------
+[0:48 - 1:12] (24 giây) — PHÂN ĐOẠN 5: TRẢI NGHIỆM CHƠI QUIZ & TIMER 30S (TÍNH NĂNG 2)
+Bối cảnh giao diện: Người chơi bắt đầu thử thách, đồng hồ đếm ngược 30 giây và tính điểm theo phản xạ.
+[Môi trường: DEMO LOCAL — http://localhost:3000/ & Gameplay]
+Lời dẫn (Voiceover — 53 từ):
+"Khi bắt đầu thử thách, người chơi trả lời lần lượt năm câu hỏi với đồng hồ đếm ngược ba mươi giây sinh động. Thuật toán chấm điểm thông minh tính toán dựa trên độ chính xác và thời gian phản xạ, tự động cộng điểm thưởng cho các lượt trả lời nhanh, tạo nên không khí tranh tài kịch tính."
+
+--------------------------------------------------------------------------------
+[1:12 - 1:24] (12 giây) — PHÂN ĐOẠN 6: KẾT QUẢ & GIẢI THÍCH CHI TIẾT
+Bối cảnh giao diện: Màn hình kết quả tổng điểm, mở accordion xem lại đáp án và giải thích văn hóa.
+[Môi trường: DEMO LOCAL — Màn hình kết quả]
+Lời dẫn (Voiceover — 28 từ):
+"Màn hình kết quả hiển thị tổng điểm minh bạch cùng chi tiết từng câu hỏi. Người chơi có thể mở rộng để khám phá những nét văn hóa ẩm thực độc đáo phía sau mỗi đáp án."
+
+--------------------------------------------------------------------------------
+[1:24 - 1:38] (14 giây) — PHÂN ĐOẠN 7: THU THẬP LEAD & MỞ KHÓA VOUCHER (TÍNH NĂNG 3)
+Bối cảnh giao diện: Điền form Họ tên, SĐT, kiểm tra trùng lặp và mở khóa thẻ quà tặng AMTHUC50K.
+[Môi trường: DEMO LOCAL — Biểu mẫu Lead & Thẻ Voucher]
+Lời dẫn (Voiceover — 33 từ):
+"Người chơi chỉ cần nhập họ tên và số điện thoại để mở khóa ngay thẻ voucher ưu đãi độc quyền. Hệ thống tự động đối soát chống trùng lặp, giúp doanh nghiệp thu thập dữ liệu khách hàng chất lượng cao."
+
+--------------------------------------------------------------------------------
+[1:38 - 1:48] (10 giây) — PHÂN ĐOẠN 8: BẢNG XẾP HẠNG TOP 10 REALTIME (TÍNH NĂNG 4)
+Bối cảnh giao diện: Modal Bảng Xếp Hạng Top 10 cao thủ với số điện thoại ẩn danh.
+[Môi trường: DEMO LOCAL — Modal Top 10]
+Lời dẫn (Voiceover — 25 từ):
+"Bảng xếp hạng Top mười vinh danh những người chơi xuất sắc nhất theo thời gian thực với số điện thoại được ẩn danh bảo mật, kích thích tinh thần đua top sôi nổi."
+
+--------------------------------------------------------------------------------
+[1:48 - 1:57] (09 giây) — PHÂN ĐOẠN 9: CHIA SẺ KẾT QUẢ & LAN TỎA FANPAGE (TÍNH NĂNG 5)
+Bối cảnh giao diện: Nút chia sẻ Facebook, sao chép liên kết thử thách.
+[Môi trường: DEMO LOCAL — Nút Chia sẻ]
+Lời dẫn (Voiceover — 23 từ):
+"Chức năng chia sẻ Facebook và sao chép liên kết giúp lan tỏa minigame mạnh mẽ, gia tăng tương tác tự nhiên và thu hút thêm hàng ngàn người tham gia mới."
+
+--------------------------------------------------------------------------------
+[1:57 - 2:00] (03 giây) — PHÂN ĐOẠN 10: TỔNG KẾT & THÔNG ĐIỆP KẾT THÚC
+Bối cảnh giao diện: Khung hình kết thúc, Logo QuizVibe AI, URL sản phẩm và thông tin dự thi.
+[Môi trường: DEMO LOCAL]
+Lời dẫn (Voiceover — 11 từ):
+"QuizVibe AI — Đột phá tương tác, bứt phá chuyển đổi cho Fanpage của bạn!"
+
+================================================================================
+THỐNG KÊ KỊCH BẢN NARRATION:
+- Tổng số phân đoạn: 10 phân đoạn logic liền mạch
+- Tổng số từ: 293 từ
+- Tốc độ đọc trung bình: ~146 từ/phút (chuẩn giọng đọc video demo công nghệ)
+- Khớp 100% với 10 scenes trong storyboard.json và recording-plan.json
+================================================================================

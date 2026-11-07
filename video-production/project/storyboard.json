@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "timing_source": "markers",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "duration_limit": 120,
+    "audio": true
+  },
+  "caption_style": {
+    "enabled": true,
+    "font_name": "Arial",
+    "font_size": 42,
+    "bottom_margin": 60,
+    "raised_margin": 220
+  },
+  "scenes": [
+    {
+      "id": "opening-hold",
+      "purpose": "Thiết lập bối cảnh giới thiệu QuizVibe AI: Nền tảng Minigame Quiz Thu Lead Thông Minh cho Fanpage",
+      "kind": "still",
+      "source": "recordings/raw-session.webm",
+      "duration": 4,
+      "frame_at": 0.942,
+      "caption": null,
+      "camera": null,
+      "transition": "cut"
+    },
+    {
+      "id": "landing-overview",
+      "purpose": "Khám phá chiến dịch Ẩm thực Hà Nội: tiêu đề, 5 câu hỏi, 30s/câu, thể lệ và thẻ quà tặng Voucher",
+      "kind": "video",
+      "source": "recordings/raw-session.webm",
+      "trim": {
+        "start": 4.949,
+        "end": 14.481
+      },
+      "caption": {
+        "text": "QuizVibe AI: Nền tảng Minigame Quiz thu Lead Fanpage thông minh",
+        "placement": "bottom"
+      },
+      "camera": null,
+      "transition": "cut"
+    },
+    {
+      "id": "admin-dashboard",
+      "purpose": "Admin Studio: Đăng nhập bảo mật cookie, tổng quan chiến dịch và quản trị tập trung",
+      "kind": "video",
+      "source": "recordings/raw-session.webm",
+      "trim": {
+        "start": 15.33,
+        "end": 23.311
+      },
+      "caption": {
+        "text": "Admin Studio: Quản lý chiến dịch tập trung, bảo mật HttpOnly Cookie phía máy chủ",
+        "placement": "bottom"
+      },
+      "camera": null,
+      "transition": "cut"
+    },
+    {
+      "id": "ai-quiz-generation",
+      "purpose": "Tạo Quiz bằng AI: Nhập chủ đề ẩm thực, AI sinh 5 câu hỏi trong 320ms kèm Cổng kiểm duyệt nội dung",
+      "kind": "video",
+      "source": "recordings/raw-session.webm",
+      "trim": {
+        "start": 23.938,
+        "end": 36.405
+      },
+      "caption": {
+        "text": "Tạo Quiz bằng AI: Tự động sinh 5 câu hỏi trắc nghiệm kèm Cổng kiểm duyệt nội dung",
+        "placement": "bottom"
+      },
+      "camera": null,
+      "transition": "cut"
+    },
+    {
+      "id": "quiz-gameplay-timer",
+      "purpose": "Gameplay minigame: Trả lời 5 câu hỏi ẩm thực, đồng hồ đếm ngược 30 giây và tính điểm theo phản xạ",
+      "kind": "video",
+      "source": "recordings/raw-session.webm",
+      "trim": {
+        "start": 37.07,
+        "end": 51.204
+      },
+      "caption": {
+        "text": "Chơi Quiz: Đếm ngược 30 giây mỗi câu, cộng điểm thưởng tốc độ phản xạ",
+        "placement": "bottom"
+      },
+      "camera": null,
+      "transition": "cut"
+    },
+    {
+      "id": "result-breakdown",
+      "purpose": "Màn hình kết quả: Tổng điểm đạt được và mở rộng xem giải thích chi tiết kiến thức từng câu",
+      "kind": "video",
+      "source": "recordings/raw-session.webm",
+      "trim": {
+        "start": 51.207,
+        "end": 61.263
+      },
+      "caption": {
+        "text": "Màn hình kết quả: Tổng điểm đạt được và giải thích chi tiết kiến thức từng câu",
+        "placement": "bottom"
+      },
+      "camera": null,
+      "transition": "cut"
+    },
+    {
+      "id": "lead-voucher-claim",
+      "purpose": "Thu thập Lead & Mở khóa Voucher: Tiếp nhận thông tin khách hàng, chống trùng lặp, cấp mã AMTHUC50K",
+      "kind": "video",
+      "source": "recordings/raw-session.webm",
+      "trim": {
+        "start": 61.263,
+        "end": 66.692
+      },
+      "caption": {
+        "text": "Thu thập Lead & Mở khóa Voucher: Tiếp nhận thông tin khách hàng, cấp mã ưu đãi độc quyền",
+        "placement": "bottom"
+      },
+      "camera": null,
+      "transition": "cut"
+    },
+    {
+      "id": "leaderboard-top10",
+      "purpose": "Bảng xếp hạng Top 10 cao thủ realtime: Vinh danh người chơi xuất sắc nhất, ẩn danh số điện thoại",
+      "kind": "video",
+      "source": "recordings/raw-session.webm",
+      "trim": {
+        "start": 66.692,
+        "end": 72.799
+      },
+      "caption": {
+        "text": "Bảng xếp hạng Top 10: Xếp hạng người chơi xuất sắc nhất theo thời gian thực",
+        "placement": "bottom"
+      },
+      "camera": null,
+      "transition": "cut"
+    },
+    {
+      "id": "social-sharing",
+      "purpose": "Chia sẻ kết quả: Lan tỏa minigame lên Fanpage, sao chép liên kết kích thích tương tác cộng đồng",
+      "kind": "video",
+      "source": "recordings/raw-session.webm",
+      "trim": {
+        "start": 72.799,
+        "end": 78.451
+      },
+      "caption": {
+        "text": "Chia sẻ kết quả: Lan tỏa minigame lên Fanpage, tối ưu tương tác tự nhiên",
+        "placement": "bottom"
+      },
+      "camera": null,
+      "transition": "cut"
+    },
+    {
+      "id": "closing-summary",
+      "purpose": "Thông điệp kết thúc: Logo QuizVibe AI, URL sản phẩm và khẳng định giá trị cho VIBE-CODING 2026",
+      "kind": "still",
+      "source": "recordings/raw-session.webm",
+      "caption": null,
+      "camera": null,
+      "transition": "cut",
+      "duration": 4,
+      "frame_at": 78.451
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+﻿[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+ScaledBorderAndShadow: yes
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cinema,Arial,38,&H00FFFFFF,&H00FFFFFF,&H90000000,&H80000000,0,0,0,0,100,100,0,0,3,2,0,2,60,60,55,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.15,0:00:07.72,Cinema,,0,0,0,,Chào mừng bạn đến với QuizVibe AI — giải pháp biến minigame tương tác\Nthành quy trình thu thập khách hàng tiềm năng cho Fanpage.
+Dialogue: 0,0:00:08.07,0:00:15.78,Cinema,,0,0,0,,Trên trang công khai, người chơi dễ dàng theo dõi thể lệ 30 giây mỗi câu hỏi\Ncùng cơ hội nhận ngay voucher ưu đãi hấp dẫn.
+Dialogue: 0,0:00:16.91,0:00:25.51,Cinema,,0,0,0,,Khu vực Admin Studio được bảo vệ bằng phiên làm việc máy chủ,\Ngiúp quản trị viên theo dõi chiến dịch và người tham gia tập trung.
+Dialogue: 0,0:00:25.93,0:00:35.73,Cinema,,0,0,0,,Trong môi trường thử nghiệm, hệ thống mô phỏng tạo bộ 5 câu hỏi theo chủ đề.\NQuản trị viên luôn có Cổng kiểm duyệt để hiệu đính trước khi xuất bản.
+Dialogue: 0,0:00:37.04,0:00:46.48,Cinema,,0,0,0,,Người chơi lần lượt trả lời 5 câu hỏi với đồng hồ đếm ngược 30 giây.\NThuật toán tự động cộng điểm thưởng phản xạ nhanh và chính xác.
+Dialogue: 0,0:00:51.91,0:00:59.31,Cinema,,0,0,0,,Màn hình kết quả tổng hợp điểm số minh bạch, đồng thời cho phép\Nmở rộng để xem giải thích kiến thức chi tiết từng câu hỏi.
+Dialogue: 0,0:00:59.99,0:01:09.67,Cinema,,0,0,0,,Để nhận voucher, người chơi gửi họ tên và số điện thoại.\NHệ thống tự động chống trùng lặp, đảm bảo dữ liệu khách hàng chất lượng cao.
+Dialogue: 0,0:01:10.42,0:01:17.97,Cinema,,0,0,0,,Bảng xếp hạng Top 10 cập nhật thời gian thực, ẩn danh số điện thoại\Nđể bảo vệ quyền riêng tư và thúc đẩy người chơi cạnh tranh.
+Dialogue: 0,0:01:18.87,0:01:26.30,Cinema,,0,0,0,,Tính năng chia sẻ mạng xã hội và sao chép mã ưu đãi\Ngiúp minigame lan tỏa tự nhiên, mở rộng tệp khách hàng tiềm năng.
+Dialogue: 0,0:01:27.24,0:01:33.90,Cinema,,0,0,0,,QuizVibe AI — Giải pháp minigame thông minh,\Nbứt phá chuyển đổi và tương tác cho Fanpage của bạn.

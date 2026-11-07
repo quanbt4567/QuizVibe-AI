@@ -55,3 +55,9 @@ scratch/
 # Design references & external research
 design-references/
 
+# Video production intermediate raw recordings & uncompressed audio
+video-production/project/recordings/.raw/
+video-production/project/recordings/*.webm
+video-production/output/*.wav
+
+

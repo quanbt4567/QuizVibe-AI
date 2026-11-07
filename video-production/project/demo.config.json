@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "project_name": "quizvibe-ai-demo",
+  "start_url": "http://localhost:3000/",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "duration_limit": 120.0,
+    "opening_hold_seconds": 4.0,
+    "audio": true
+  },
+  "captions": {
+    "enabled": true,
+    "font_name": "Arial",
+    "font_size": 42,
+    "bottom_margin": 60,
+    "raised_margin": 220
+  },
+  "recording": {
+    "headless": true,
+    "storage_state_env": "DEMO_STORAGE_STATE",
+    "output_video": "recordings/raw-session.webm",
+    "marker_file": "recording-markers.json"
+  },
+  "editing": {
+    "pre_roll_seconds": 0.2,
+    "post_roll_seconds": 0.4,
+    "default_transition": "cut"
+  }
+}

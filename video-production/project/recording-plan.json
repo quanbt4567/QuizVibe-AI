@@ -1,0 +1,473 @@
+{
+  "version": 1,
+  "description": "Kế hoạch ghi hình tự động hoàn thiện (Revised) cho QuizVibe AI Demo Video. Đồng bộ 100% với lời thoại Edge TTS Neural tiếng Việt (~101s), camera framing và các khoảng nghỉ quan sát trực quan.",
+  "safety_policy": {
+    "environment": "DEMO_LOCAL_STRICT",
+    "target_url": "${DEMO_LOCAL_URL}",
+    "forbidden_on_production": [
+      "NO form submissions on production",
+      "NO password inputs or logins on production",
+      "NO quiz creations or AI generation calls on production",
+      "NO quiz session starts or answer submissions on production",
+      "NO lead captures or voucher claims on production",
+      "NO database mutations outside in-memory FakePostgrest"
+    ]
+  },
+  "actions": [
+    {
+      "comment": "=== SCENE 1: MỞ ĐẦU THƯƠNG HIỆU (7.5s - Voice: 7.32s) ===",
+      "type": "goto",
+      "url": "${DEMO_LOCAL_URL}/",
+      "wait_until": "networkidle",
+      "timeout_ms": 30000
+    },
+    {
+      "type": "wait_for",
+      "selector": "h1",
+      "state": "visible",
+      "timeout_ms": 15000
+    },
+    {
+      "type": "marker",
+      "name": "opening-start"
+    },
+    {
+      "comment": "Khung hình tĩnh thương hiệu QuizVibe AI cho đoạn mở đầu",
+      "type": "wait",
+      "milliseconds": 7500
+    },
+    {
+      "type": "marker",
+      "name": "opening-end"
+    },
+
+    {
+      "comment": "=== SCENE 2: LANDING PAGE CHIẾN DỊCH (9.5s - Voice: 7.46s) ===",
+      "type": "marker",
+      "name": "landing-start"
+    },
+    {
+      "comment": "Quan sát tiêu đề chiến dịch và thể lệ 30 giây",
+      "type": "wait",
+      "milliseconds": 2500
+    },
+    {
+      "comment": "Cuộn nhẹ để quan sát Thẻ phần thưởng Voucher AMTHUC50K",
+      "type": "scroll",
+      "x": 0,
+      "y": 280
+    },
+    {
+      "type": "wait",
+      "milliseconds": 3800
+    },
+    {
+      "type": "scroll",
+      "x": 0,
+      "y": -280
+    },
+    {
+      "type": "wait",
+      "milliseconds": 2500
+    },
+    {
+      "type": "marker",
+      "name": "landing-end"
+    },
+
+    {
+      "comment": "=== SCENE 3: ADMIN STUDIO & QUẢN TRỊ TẬP TRUNG (11.0s - Voice: 8.35s) ===",
+      "type": "goto",
+      "url": "${DEMO_LOCAL_URL}/admin/login",
+      "wait_until": "networkidle",
+      "timeout_ms": 30000
+    },
+    {
+      "type": "wait_for",
+      "selector": "input[type=\"password\"]",
+      "state": "visible",
+      "timeout_ms": 15000
+    },
+    {
+      "type": "marker",
+      "name": "admin-dashboard-start"
+    },
+    {
+      "type": "fill",
+      "selector": "input[type=\"password\"]",
+      "text": "${DEMO_ADMIN_PASSWORD}"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 400
+    },
+    {
+      "type": "click",
+      "selector": "button[type=\"submit\"]"
+    },
+    {
+      "type": "wait_for",
+      "selector": "text=Chiến dịch hoạt động",
+      "state": "visible",
+      "timeout_ms": 15000
+    },
+    {
+      "comment": "Quan sát Bảng điều khiển Studio tổng quan",
+      "type": "wait",
+      "milliseconds": 2800
+    },
+    {
+      "type": "goto",
+      "url": "${DEMO_LOCAL_URL}/admin/campaigns",
+      "wait_until": "networkidle",
+      "timeout_ms": 15000
+    },
+    {
+      "type": "wait_for",
+      "selector": "button:has-text(\"Đã xuất bản\")",
+      "state": "visible",
+      "timeout_ms": 10000
+    },
+    {
+      "comment": "Quan sát danh sách chiến dịch và trạng thái",
+      "type": "wait",
+      "milliseconds": 3500
+    },
+    {
+      "type": "marker",
+      "name": "admin-dashboard-end"
+    },
+
+    {
+      "comment": "=== SCENE 4: TẠO QUIZ BẰNG MOCK AI & REVIEW GATE (13.5s - Voice: 9.55s) ===",
+      "type": "goto",
+      "url": "${DEMO_LOCAL_URL}/admin/campaigns/new",
+      "wait_until": "networkidle",
+      "timeout_ms": 15000
+    },
+    {
+      "type": "wait_for",
+      "selector": "button:has-text(\"Tạo bằng AI\")",
+      "state": "visible",
+      "timeout_ms": 10000
+    },
+    {
+      "type": "marker",
+      "name": "ai-quiz-start"
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Tạo bằng AI\")"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 400
+    },
+    {
+      "type": "fill",
+      "selector": "input[placeholder*=\"Bí quyết chăm sóc da\"]",
+      "text": "Đặc sản Ẩm thực Truyền thống Phố cổ Hà Nội"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 600
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Tạo 5 câu hỏi bằng AI\")"
+    },
+    {
+      "type": "wait_for",
+      "selector": "h2:has-text(\"Kiểm duyệt & Hiệu đính\")",
+      "state": "visible",
+      "timeout_ms": 15000
+    },
+    {
+      "comment": "Quan sát Cổng kiểm duyệt Review Gate",
+      "type": "wait",
+      "milliseconds": 3000
+    },
+    {
+      "type": "scroll",
+      "x": 0,
+      "y": 380
+    },
+    {
+      "type": "wait",
+      "milliseconds": 3500
+    },
+    {
+      "type": "scroll",
+      "x": 0,
+      "y": -380
+    },
+    {
+      "type": "wait",
+      "milliseconds": 2200
+    },
+    {
+      "type": "marker",
+      "name": "ai-quiz-end"
+    },
+
+    {
+      "comment": "=== SCENE 5: TRẢI NGHIỆM CHƠI QUIZ & TIMER 30S (16.0s - Voice: 9.19s) ===",
+      "type": "goto",
+      "url": "${DEMO_LOCAL_URL}/",
+      "wait_until": "networkidle",
+      "timeout_ms": 15000
+    },
+    {
+      "type": "wait_for",
+      "selector": "button:has-text(\"Bắt đầu chơi ngay!\")",
+      "state": "visible",
+      "timeout_ms": 10000
+    },
+    {
+      "type": "marker",
+      "name": "gameplay-start"
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Bắt đầu chơi ngay!\")"
+    },
+    {
+      "type": "wait_for",
+      "selector": "text=Câu 1 / 5",
+      "state": "visible",
+      "timeout_ms": 10000
+    },
+    {
+      "comment": "Câu 1: Phở bò Hà Nội",
+      "type": "wait",
+      "milliseconds": 1600
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Bánh phở tươi sợi mềm\")"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 1400
+    },
+    {
+      "comment": "Câu 2: Chả cá Lã Vọng",
+      "type": "wait",
+      "milliseconds": 1400
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Thì là và hành hoa\")"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 1400
+    },
+    {
+      "comment": "Câu 3: Cốm Làng Vòng",
+      "type": "wait",
+      "milliseconds": 1400
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Lá sen tươi\")"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 1400
+    },
+    {
+      "comment": "Câu 4: Cà phê trứng",
+      "type": "wait",
+      "milliseconds": 1400
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Cà phê trứng\")"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 1400
+    },
+    {
+      "comment": "Câu 5: Bún chả than hoa",
+      "type": "wait",
+      "milliseconds": 1400
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Chả băm, chả miếng nướng than hoa\")"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 1600
+    },
+    {
+      "type": "marker",
+      "name": "gameplay-end"
+    },
+
+    {
+      "comment": "=== SCENE 6: KẾT QUẢ & GIẢI THÍCH CHI TIẾT (8.5s - Voice: 7.15s) ===",
+      "type": "wait_for",
+      "selector": "text=Chi tiết câu trả lời",
+      "state": "visible",
+      "timeout_ms": 15000
+    },
+    {
+      "type": "marker",
+      "name": "result-start"
+    },
+    {
+      "comment": "Quan sát tổng điểm đạt được",
+      "type": "wait",
+      "milliseconds": 2500
+    },
+    {
+      "comment": "Mở accordion câu 1 xem giải thích văn hóa ẩm thực",
+      "type": "click",
+      "selector": "#accordion-trigger-0"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 3500
+    },
+    {
+      "type": "scroll",
+      "x": 0,
+      "y": 180
+    },
+    {
+      "type": "wait",
+      "milliseconds": 2000
+    },
+    {
+      "type": "marker",
+      "name": "result-end"
+    },
+
+    {
+      "comment": "=== SCENE 7: THU THẬP LEAD & MỞ KHÓA VOUCHER (11.0s - Voice: 9.43s) ===",
+      "type": "marker",
+      "name": "lead-voucher-start"
+    },
+    {
+      "comment": "Quan sát biểu mẫu thu thập lead",
+      "type": "wait",
+      "milliseconds": 1200
+    },
+    {
+      "type": "fill",
+      "selector": "#lead-fullname",
+      "text": "Trần Hoàng Bách"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 600
+    },
+    {
+      "type": "fill",
+      "selector": "#lead-phone",
+      "text": "0966554433"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 800
+    },
+    {
+      "type": "click",
+      "selector": "button[data-testid=\"submit-lead-btn\"]"
+    },
+    {
+      "type": "wait_for",
+      "selector": "text=AMTHUC50K",
+      "state": "visible",
+      "timeout_ms": 15000
+    },
+    {
+      "comment": "Quan sát thẻ Voucher AMTHUC50K đã mở khóa rực rỡ",
+      "type": "wait",
+      "milliseconds": 5200
+    },
+    {
+      "type": "marker",
+      "name": "lead-voucher-end"
+    },
+
+    {
+      "comment": "=== SCENE 8: BẢNG XẾP HẠNG TOP 10 REALTIME (9.0s - Voice: 7.30s) ===",
+      "type": "marker",
+      "name": "leaderboard-start"
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Xem Bảng Xếp Hạng Top 10\")"
+    },
+    {
+      "type": "wait_for",
+      "selector": "#leaderboard-modal-title",
+      "state": "visible",
+      "timeout_ms": 10000
+    },
+    {
+      "comment": "Quan sát danh sách Top 10 cao thủ và số điện thoại ẩn danh",
+      "type": "wait",
+      "milliseconds": 6000
+    },
+    {
+      "type": "click",
+      "selector": "button[aria-label=\"Đóng bảng xếp hạng\"]"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 1500
+    },
+    {
+      "type": "marker",
+      "name": "leaderboard-end"
+    },
+
+    {
+      "comment": "=== SCENE 9: CHIA SẺ KẾT QUẢ & LAN TỎA (8.5s - Voice: 7.18s) ===",
+      "type": "marker",
+      "name": "share-start"
+    },
+    {
+      "type": "click",
+      "selector": "button:has-text(\"Chia sẻ lên Facebook\")"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 3200
+    },
+    {
+      "comment": "Bấm sao chép mã ưu đãi voucher",
+      "type": "click",
+      "selector": "button:has-text(\"Sao chép mã\")"
+    },
+    {
+      "comment": "Giữ trạng thái Đã sao chép! trên màn hình",
+      "type": "wait",
+      "milliseconds": 3500
+    },
+    {
+      "type": "marker",
+      "name": "share-end"
+    },
+
+    {
+      "comment": "=== SCENE 10: TỔNG KẾT & THÔNG ĐIỆP KẾT THÚC (7.0s - Voice: 6.41s) ===",
+      "type": "marker",
+      "name": "closing-start"
+    },
+    {
+      "comment": "Khung hình kết thúc, slogan QuizVibe AI và khẳng định giá trị",
+      "type": "wait",
+      "milliseconds": 7000
+    },
+    {
+      "type": "marker",
+      "name": "closing-end"
+    }
+  ]
+}

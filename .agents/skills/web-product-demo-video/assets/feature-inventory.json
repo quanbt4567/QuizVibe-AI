@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "service": {
+    "name": "Replace after inspecting the target service",
+    "audience": "Replace with the intended audience",
+    "video_goal": "Replace with the outcome this demo must communicate"
+  },
+  "features": [
+    {
+      "id": "replace-with-verified-feature",
+      "order": 1,
+      "title": "Replace with a verified feature",
+      "purpose": "Explain why this scene matters to the audience",
+      "caption": "Replace with a short value-oriented caption or null",
+      "required": true,
+      "priority": 100,
+      "estimated_seconds": 6.0,
+      "start_marker": "feature-start",
+      "end_marker": "feature-end",
+      "focus": null
+    }
+  ]
+}

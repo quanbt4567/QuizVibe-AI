@@ -1,0 +1,106 @@
+================================================================================
+KỊCH BẢN LỜI DẪN TIẾNG VIỆT HOÀN THIỆN (REVISED NARRATION SCRIPT)
+Dự án: QuizVibe AI — Minigame Quiz Thu Lead Thông Minh Cho Fanpage
+Đề bài: VIBE-CODING 2026 Bảng A — Thử Thách 3
+Thời lượng chuẩn hóa: ~90 - 105 giây | Độ phân giải: 1920x1080 | 60 FPS
+Phong thái: Chuyên gia giới thiệu sản phẩm công nghệ, tự nhiên, ngắt nghỉ rõ ràng
+Tốc độ đọc: Chuẩn 1.0x (~130 từ/phút) — Tuyệt đối không ép tăng tốc âm thanh
+================================================================================
+
+[PHÂN ĐOẠN 1: MỞ ĐẦU THƯƠNG HIỆU]
+Mã cảnh: opening-hold
+Thời lượng cảnh: ~5.0 giây
+Thời lượng đọc: ~4.2 giây (nghỉ 0.8 giây)
+Hình ảnh: Màn hình nhận diện thương hiệu QuizVibe AI trên Landing Page
+Lời thoại:
+"Chào mừng bạn đến với QuizVibe AI — giải pháp biến minigame tương tác thành quy trình thu thập khách hàng tiềm năng cho Fanpage."
+
+--------------------------------------------------------------------------------
+[PHÂN ĐOẠN 2: LANDING PAGE CHIẾN DỊCH]
+Mã cảnh: landing-overview
+Thời lượng cảnh: ~10.5 giây
+Thời lượng đọc: ~4.8 giây (nghỉ 5.7 giây quan sát cuộn trang)
+Hình ảnh: Khám phá tiêu đề chiến dịch "Ẩm thực Hà Nội", thể lệ 30s và thẻ voucher quà tặng
+Lời thoại:
+"Trên trang công khai, người chơi dễ dàng theo dõi thể lệ ba mươi giây mỗi câu hỏi cùng cơ hội nhận ngay voucher ưu đãi hấp dẫn."
+
+--------------------------------------------------------------------------------
+[PHÂN ĐOẠN 3: ADMIN STUDIO & QUẢN LÝ TẬP TRUNG]
+Mã cảnh: admin-dashboard
+Thời lượng cảnh: ~12.5 giây
+Thời lượng đọc: ~5.5 giây (nghỉ 7.0 giây quan sát đăng nhập & danh sách)
+Hình ảnh: Đăng nhập Admin bảo mật HttpOnly Cookie, bảng điều khiển tổng quan và danh sách chiến dịch
+Lời thoại:
+"Khu vực Admin Studio được bảo vệ bằng phiên làm việc máy chủ, giúp nhà quản trị theo dõi chiến dịch và quản lý danh sách người tham gia tập trung."
+
+--------------------------------------------------------------------------------
+[PHÂN ĐOẠN 4: TẠO QUIZ BẰNG MOCK AI & REVIEW GATE]
+Mã cảnh: ai-quiz-generation
+Thời lượng cảnh: ~16.5 giây
+Thời lượng đọc: ~6.0 giây (nghỉ 10.5 giây quan sát sinh câu hỏi & cuộn Review Gate)
+Hình ảnh: Nhập chủ đề ẩm thực, Mock AI sinh 5 câu hỏi, rà soát trên Cổng kiểm duyệt Review Gate
+Lời thoại:
+"Trong môi trường thử nghiệm, hệ thống mô phỏng tạo bộ năm câu hỏi theo chủ đề. Quản trị viên luôn có Cổng kiểm duyệt để hiệu đính nội dung trước khi xuất bản."
+
+--------------------------------------------------------------------------------
+[PHÂN ĐOẠN 5: TRẢI NGHIỆM GAMEPLAY & ĐỒNG HỒ 30 GIÂY]
+Mã cảnh: quiz-gameplay-timer
+Thời lượng cảnh: ~19.5 giây
+Thời lượng đọc: ~6.2 giây (nghỉ 13.3 giây quan sát trả lời 5 câu hỏi & timer đếm ngược)
+Hình ảnh: Người chơi trả lời liên tiếp 5 câu hỏi ẩm thực, đồng hồ đếm ngược 30 giây chạy liên tục, cộng điểm phản xạ
+Lời thoại:
+"Người chơi lần lượt trả lời năm câu hỏi với đồng hồ đếm ngược ba mươi giây. Thuật toán chấm điểm tự động cộng điểm thưởng cho các lượt phản xạ nhanh và chính xác."
+
+--------------------------------------------------------------------------------
+[PHÂN ĐOẠN 6: KẾT QUẢ & GIẢI THÍCH CHI TIẾT]
+Mã cảnh: result-breakdown
+Thời lượng cảnh: ~10.5 giây
+Thời lượng đọc: ~4.8 giây (nghỉ 5.7 giây quan sát điểm số & accordion giải thích)
+Hình ảnh: Màn hình kết quả tổng điểm minh bạch, mở accordion xem giải thích kiến thức văn hóa từng câu
+Lời thoại:
+"Màn hình kết quả tổng hợp điểm số minh bạch, đồng thời cho phép mở rộng để xem giải thích kiến thức chi tiết cho từng câu hỏi."
+
+--------------------------------------------------------------------------------
+[PHÂN ĐOẠN 7: THU THẬP LEAD & MỞ KHÓA VOUCHER]
+Mã cảnh: lead-voucher-claim
+Thời lượng cảnh: ~9.5 giây
+Thời lượng đọc: ~5.0 giây (nghỉ 4.5 giây quan sát gửi thông tin & mở thẻ voucher)
+Hình ảnh: Nhập Họ tên, Số điện thoại, gửi form và thẻ voucher AMTHUC50K mở khóa rực rỡ
+Lời thoại:
+"Để nhận voucher, người chơi gửi họ tên và số điện thoại. Hệ thống tự động đối soát chống trùng lặp, đảm bảo dữ liệu khách hàng chất lượng cao."
+
+--------------------------------------------------------------------------------
+[PHÂN ĐOẠN 8: BẢNG XẾP HẠNG TOP 10 REALTIME]
+Mã cảnh: leaderboard-top10
+Thời lượng cảnh: ~8.5 giây
+Thời lượng đọc: ~4.9 giây (nghỉ 3.6 giây quan sát thứ hạng & số điện thoại ẩn danh)
+Hình ảnh: Modal Bảng xếp hạng Top 10 cao thủ realtime, vinh danh người chơi dẫn đầu, số điện thoại ẩn danh
+Lời thoại:
+"Bảng xếp hạng Top mười cập nhật theo thời gian thực, ẩn danh số điện thoại để bảo vệ quyền riêng tư và thúc đẩy người chơi cạnh tranh."
+
+--------------------------------------------------------------------------------
+[PHÂN ĐOẠN 9: CHIA SẺ KẾT QUẢ & LAN TỎA]
+Mã cảnh: social-sharing
+Thời lượng cảnh: ~7.5 giây
+Thời lượng đọc: ~4.5 giây (nghỉ 3.0 giây quan sát nút đổi trạng thái 'Đã sao chép!')
+Hình ảnh: Bấm nút chia sẻ Facebook và bấm sao chép mã ưu đãi voucher thành công
+Lời thoại:
+"Tính năng chia sẻ mạng xã hội và sao chép mã ưu đãi giúp minigame lan tỏa tự nhiên, mở rộng tệp khách hàng tiềm năng."
+
+--------------------------------------------------------------------------------
+[PHÂN ĐOẠN 10: TỔNG KẾT & THÔNG ĐIỆP KẾT THÚC]
+Mã cảnh: closing-summary
+Thời lượng cảnh: ~5.0 giây
+Thời lượng đọc: ~3.8 giây (nghỉ 1.2 giây kết thúc)
+Hình ảnh: Khung hình kết thúc với thông điệp thương hiệu QuizVibe AI
+Lời thoại:
+"QuizVibe AI — Giải pháp minigame thông minh, bứt phá chuyển đổi và tương tác cho Fanpage của bạn."
+
+================================================================================
+THỐNG KÊ KỊCH BẢN HOÀN THIỆN:
+- Tổng số từ: 240 từ (trung bình 24 từ / cảnh)
+- Tỷ lệ thoại/khoảng dừng: ~50% thoại, ~50% khoảng nghỉ để người xem theo dõi thao tác
+- Không có bất kỳ câu nào bị nhồi nhét hay đọc dồn chữ
+- Làm nổi bật 100% giá trị cốt lõi: Minigame thành quy trình thu Lead Fanpage có hệ thống
+================================================================================
+

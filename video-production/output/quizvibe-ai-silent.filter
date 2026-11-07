@@ -1,0 +1,12 @@
+[0:v]trim=start=0.942:end=0.992,setpts=PTS-STARTPTS,fps=60,tpad=stop_mode=clone:stop_duration=4.0,trim=duration=4.0,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=60,trim=duration=4.0,setpts=PTS-STARTPTS[v0];
+[1:v]trim=start=4.949:end=14.481,setpts=PTS-STARTPTS,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=60,trim=duration=9.532,setpts=PTS-STARTPTS[v1];
+[2:v]trim=start=15.33:end=23.311,setpts=PTS-STARTPTS,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=60,trim=duration=7.981,setpts=PTS-STARTPTS[v2];
+[3:v]trim=start=23.938:end=36.405,setpts=PTS-STARTPTS,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=60,trim=duration=12.467000000000002,setpts=PTS-STARTPTS[v3];
+[4:v]trim=start=37.07:end=51.204,setpts=PTS-STARTPTS,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=60,trim=duration=14.134,setpts=PTS-STARTPTS[v4];
+[5:v]trim=start=51.207:end=61.263,setpts=PTS-STARTPTS,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=60,trim=duration=10.055999999999997,setpts=PTS-STARTPTS[v5];
+[6:v]trim=start=61.263:end=66.692,setpts=PTS-STARTPTS,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=60,trim=duration=5.428999999999995,setpts=PTS-STARTPTS[v6];
+[7:v]trim=start=66.692:end=72.799,setpts=PTS-STARTPTS,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=60,trim=duration=6.1070000000000135,setpts=PTS-STARTPTS[v7];
+[8:v]trim=start=72.799:end=78.451,setpts=PTS-STARTPTS,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=60,trim=duration=5.651999999999987,setpts=PTS-STARTPTS[v8];
+[9:v]trim=start=78.451:end=78.50099999999999,setpts=PTS-STARTPTS,fps=60,tpad=stop_mode=clone:stop_duration=4.0,trim=duration=4.0,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps=60,trim=duration=4.0,setpts=PTS-STARTPTS[v9];
+[v0][v1][v2][v3][v4][v5][v6][v7][v8][v9]concat=n=10:v=1:a=0[joined];
+[joined]subtitles=filename='D\:/VibeCoding/QuizVibe-AI/video-production/output/quizvibe-ai-silent.ass'[outv]

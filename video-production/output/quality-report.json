@@ -1,0 +1,9 @@
+{
+  "output_file": "quizvibe-ai-demo-final.mp4",
+  "resolution": "1920x1080",
+  "frame_rate": "60.00 fps",
+  "duration_seconds": 79.3,
+  "video_codec": "h264",
+  "audio_codec": "aac",
+  "status": "PASSED"
+}
