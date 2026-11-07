@@ -27,6 +27,7 @@ export interface QuizAnswerResult {
   isComplete: boolean;
   correctIndex?: number;
   explanation?: string | null;
+  remainingSeconds?: number;
   nextQuestion: PublicQuestionPlay | null;
   result?: {
     totalScore: number;

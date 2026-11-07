@@ -293,7 +293,7 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
 
   const urgencyClasses = getUrgencyClasses(timer.urgency);
 
-  const submitServerAnswer = (index: number) => {
+  const submitServerAnswer = (index: number, clientRemainingSec?: number) => {
     if (!initialSession) return;
     setSubmissionError(null);
     isLockedRef.current = true;
@@ -313,6 +313,13 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
           setServerExplanation(null);
         }
 
+        const remainingSec = typeof res.remainingSeconds === 'number'
+          ? res.remainingSeconds
+          : (res.isCorrect && res.pointsEarned > 100
+              ? Math.round((res.pointsEarned - 100) / 10)
+              : (clientRemainingSec ?? 0));
+        const spentSec = Math.max(0, 30 - remainingSec);
+
         const questionResult: QuestionPlayResult = {
           questionIndex: currentQuestionIndex,
           questionId: `q_${currentQuestionIndex + 1}`,
@@ -321,8 +328,8 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
           selectedOptionIndex: index,
           correctIndex: typeof res.correctIndex === 'number' ? res.correctIndex : (res.isCorrect ? index : -1),
           isCorrect: res.isCorrect,
-          timeRemainingSeconds: Math.round(res.pointsEarned > 100 ? (res.pointsEarned - 100) / 10 : 0),
-          timeSpentSeconds: 30 - Math.round(res.pointsEarned > 100 ? (res.pointsEarned - 100) / 10 : 0),
+          timeRemainingSeconds: remainingSec,
+          timeSpentSeconds: spentSec,
           score: res.pointsEarned,
           explanation: res.explanation ?? undefined,
         };
@@ -392,13 +399,14 @@ export const QuizGameScreen: React.FC<QuizGameScreenProps> = ({
     // Pause timer immediately to freeze remaining time
     timer.pause();
 
+    const remainingSeconds = Math.max(1, Math.min(30, Math.ceil(remainingMs / 1000)));
+
     if (initialSession) {
-      submitServerAnswer(index);
+      submitServerAnswer(index, remainingSeconds);
       return;
     }
 
     // Deterministic speed scoring at the exact moment of acceptance
-    const remainingSeconds = Math.max(1, Math.min(30, Math.ceil(remainingMs / 1000)));
     const isCorrect = currentQuestion ? index === currentQuestion.correctIndex : false;
     const earnedPoints = calculateSpeedScore(isCorrect, remainingSeconds);
 

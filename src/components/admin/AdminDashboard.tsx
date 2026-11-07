@@ -383,7 +383,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               onApproveAndActivate={(approvedCampaign) => {
                 onCampaignChange(approvedCampaign);
                 setReviewDraft(null);
-                setToastMessage(`Đã tạo chiến dịch AI "${approvedCampaign.title}" thành công dưới dạng Bản nháp!`);
+                setToastMessage(`Đã tạo chiến dịch "${approvedCampaign.title}" thành công dưới dạng Bản nháp!`);
                 setTimeout(() => setToastMessage(null), 4000);
                 onNavigateRoute?.('/admin/campaigns');
               }}
@@ -628,20 +628,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {/* Active Campaign & Provenance Status Strip */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-lg border border-border-subtle bg-card px-4 py-2.5 shadow-key">
         <div className="flex flex-wrap items-center gap-2.5 min-w-0">
-          {campaign?.isMock ? (
+          {campaign?.isMock && (
             <Badge variant="warning" shape="compact" className="gap-1.5 shrink-0">
               <AlertCircle className="h-3.5 w-3.5 text-amber-400" />
               <span>{campaign.mockLabel || MOCK_MODE_LABEL}</span>
-            </Badge>
-          ) : campaign?.isAiGenerated ? (
-            <Badge variant="default" shape="compact" className="gap-1.5 shrink-0">
-              <Sparkles className="h-3.5 w-3.5 text-indigo-400" />
-              <span>Chiến dịch AI</span>
-            </Badge>
-          ) : (
-            <Badge variant="success" shape="compact" className="gap-1.5 shrink-0">
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-              <span>Chiến dịch Thủ công</span>
             </Badge>
           )}
 

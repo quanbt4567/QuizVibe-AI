@@ -265,6 +265,7 @@ export class QuizService {
         isComplete: true,
         correctIndex: targetQ.correct_index,
         explanation: targetQ.explanation ?? null,
+        remainingSeconds: remainingWholeSeconds,
         nextQuestion: null,
         result: {
           totalScore: newTotalScore,
@@ -282,6 +283,7 @@ export class QuizService {
       isComplete: false,
       correctIndex: targetQ.correct_index,
       explanation: targetQ.explanation ?? null,
+      remainingSeconds: remainingWholeSeconds,
       nextQuestion: nextQ
         ? {
             questionIndex: nextIndex,

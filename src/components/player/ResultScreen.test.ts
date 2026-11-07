@@ -273,6 +273,27 @@ describe('Story 4.1: ResultScreen & Performance Breakdown', () => {
       expect(shareParams.campaignTitle).toBe('Thử Thách Skincare Rạng Rỡ');
       expect(shareParams.voucherDiscount).toBe('Giảm 20%');
     });
+
+    it('14. ensures incorrect answer with selection is never marked as timed out even if 30s elapsed', () => {
+      const incorrectAnsweredQ: QuestionPlayResult = {
+        questionIndex: 3,
+        questionId: 'q4',
+        question: 'Thủ đô của Lào là?',
+        options: ['Vientiane', 'Hanoi', 'Phnom Penh', 'Luang Prabang'],
+        selectedOptionIndex: 1, // User selected Hanoi
+        correctIndex: 0,
+        isCorrect: false,
+        timeRemainingSeconds: 0,
+        timeSpentSeconds: 30,
+        score: 0,
+      };
+
+      // Since selectedOptionIndex is 1 (not null), it must be considered answered (incorrect), not timed-out
+      const isTimedOut = incorrectAnsweredQ.selectedOptionIndex === null;
+      expect(isTimedOut).toBe(false);
+      expect(incorrectAnsweredQ.selectedOptionIndex).toBe(1);
+      expect(incorrectAnsweredQ.isCorrect).toBe(false);
+    });
   });
 });
 

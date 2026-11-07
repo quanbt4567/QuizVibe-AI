@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Campaign, Lead } from '../../types';
 import { leadAdminApi } from '../../services/leadAdminApi';
+import { campaignAdminApi } from '../../services/campaignAdminApi';
 import { maskPhoneNumber } from '../../services/validators';
 import {
   Button,
@@ -45,6 +46,7 @@ export const LeadDashboard: React.FC<LeadDashboardProps> = ({ currentCampaign })
   const [campaignFilter, setCampaignFilter] = useState<string>('all');
   const [scoreFilter, setScoreFilter] = useState<ScoreFilterType>('all');
   const [sortBy, setSortBy] = useState<SortOptionType>('newest');
+  const [campaignMap, setCampaignMap] = useState<Record<string, string>>({});
 
   // Deletion modals state
   const [deletingLead, setDeletingLead] = useState<Lead | null>(null);
@@ -56,7 +58,33 @@ export const LeadDashboard: React.FC<LeadDashboardProps> = ({ currentCampaign })
   const cancelDeleteBtnRef = useRef<HTMLButtonElement | null>(null);
   const cancelClearAllBtnRef = useRef<HTMLButtonElement | null>(null);
 
+  useEffect(() => {
+    if (currentCampaign?.id && currentCampaign?.title) {
+      setCampaignMap((prev) => ({
+        ...prev,
+        [currentCampaign.id]: currentCampaign.title,
+      }));
+    }
+  }, [currentCampaign]);
+
   const refreshLeads = () => {
+    // Proactively fetch all campaigns to resolve human-readable titles in dropdown
+    campaignAdminApi
+      .list()
+      .then((camps) => {
+        setCampaignMap((prev) => {
+          const next = { ...prev };
+          camps.forEach((c) => {
+            if (c.id && c.title) next[c.id] = c.title;
+          });
+          if (currentCampaign?.id && currentCampaign?.title) {
+            next[currentCampaign.id] = currentCampaign.title;
+          }
+          return next;
+        });
+      })
+      .catch(() => {});
+
     leadAdminApi
       .listLeads({
         campaignId: campaignFilter,
@@ -64,6 +92,15 @@ export const LeadDashboard: React.FC<LeadDashboardProps> = ({ currentCampaign })
         sortBy,
       })
       .then((apiLeads) => {
+        setCampaignMap((prev) => {
+          const next = { ...prev };
+          apiLeads.forEach((l) => {
+            if (l.campaign_id && l.campaign_title) {
+              next[l.campaign_id] = l.campaign_title;
+            }
+          });
+          return next;
+        });
         setLeads(
           apiLeads.map((l) => ({
             id: l.id,
@@ -150,8 +187,9 @@ export const LeadDashboard: React.FC<LeadDashboardProps> = ({ currentCampaign })
       if (l.campaignId) ids.add(l.campaignId);
     });
     if (currentCampaign?.id) ids.add(currentCampaign.id);
+    Object.keys(campaignMap).forEach((id) => ids.add(id));
     return Array.from(ids);
-  }, [leads, currentCampaign]);
+  }, [leads, currentCampaign, campaignMap]);
 
   const filteredLeads = useMemo(() => {
     const base = leads.filter((lead) => {
@@ -480,11 +518,19 @@ export const LeadDashboard: React.FC<LeadDashboardProps> = ({ currentCampaign })
               aria-label="Lọc theo chiến dịch"
             >
               <option value="all">Tất cả chiến dịch</option>
-              {availableCampaigns.map((cId) => (
-                <option key={cId} value={cId}>
-                  {cId === currentCampaign?.id ? `Đang chạy: ${currentCampaign.title}` : cId}
-                </option>
-              ))}
+              {availableCampaigns.map((cId) => {
+                const title = campaignMap[cId] || (cId === currentCampaign?.id ? currentCampaign.title : null);
+                const isCurrent = cId === currentCampaign?.id;
+                const label = title
+                  ? (isCurrent ? `${title} (Đang chạy)` : title)
+                  : (isCurrent ? `Chiến dịch hiện tại (${cId.slice(0, 8)}...)` : `Chiến dịch (${cId.slice(0, 8)}...)`);
+
+                return (
+                  <option key={cId} value={cId}>
+                    {label}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
@@ -584,7 +630,15 @@ export const LeadDashboard: React.FC<LeadDashboardProps> = ({ currentCampaign })
                         {(index + 1).toString().padStart(2, '0')}
                       </TableCell>
                       <TableCell className="font-medium text-foreground max-w-[180px] truncate">
-                        {lead.fullName}
+                        <div>{lead.fullName}</div>
+                        {campaignFilter === 'all' && (
+                          <div
+                            className="text-[10px] text-content-muted truncate max-w-[170px]"
+                            title={campaignMap[lead.campaignId] || lead.campaignId}
+                          >
+                            {campaignMap[lead.campaignId] || (lead.campaignId === currentCampaign?.id ? currentCampaign.title : '')}
+                          </div>
+                        )}
                       </TableCell>
                       <TableCell tabularNums className="font-mono text-xs text-content-secondary">
                         {maskPhoneNumber(lead.phoneNumber)}

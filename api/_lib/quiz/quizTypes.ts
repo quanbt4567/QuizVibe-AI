@@ -56,6 +56,7 @@ export interface QuizAnswerResponse {
   isComplete: boolean;
   correctIndex?: number;
   explanation?: string | null;
+  remainingSeconds?: number;
   nextQuestion: PublicQuestionPlayDto | null;
   result?: {
     totalScore: number;

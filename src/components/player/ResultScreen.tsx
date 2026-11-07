@@ -498,7 +498,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         <div className="space-y-2.5" role="region" aria-label="Chi tiết từng câu hỏi">
           {result.results.map((qResult: QuestionPlayResult, idx: number) => {
             const isExpanded = !!expandedIndices[idx];
-            const isTimedOut = qResult.selectedOptionIndex === null || qResult.timeSpentSeconds >= 30;
+            const isTimedOut = qResult.selectedOptionIndex === null;
             const campaignQuestion = campaign?.questions?.[qResult.questionIndex];
             const displayOptions = qResult.options || campaignQuestion?.options || [];
             const displayExplanation = qResult.explanation || campaignQuestion?.explanation;

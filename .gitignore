@@ -49,6 +49,9 @@ _bmad/config.user.toml
 .DS_Store
 Thumbs.db
 
+# Scratch and diagnostic scripts
+scratch/
+
 # Design references & external research
 design-references/
 
